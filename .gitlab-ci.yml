@@ -1,0 +1,26 @@
+image: node:16
+
+stages:
+  - Formatting
+  - Testing
+
+prettier:
+  stage: Formatting
+  retry: 1
+  script:
+    - npm ci
+    - npm run prettier
+
+eslint:
+  stage: Formatting
+  retry: 1
+  script:
+    - npm ci
+    - npm run lint
+
+jest:
+  stage: Testing
+  retry: 1
+  script:
+    - npm ci
+    - npm run test
