@@ -2,6 +2,7 @@ image: node:16
 
 stages:
   - Formatting
+  - Linting
   - Testing
 
 prettier:
@@ -12,7 +13,7 @@ prettier:
     - npm run prettier
 
 eslint:
-  stage: Formatting
+  stage: Linting
   retry: 1
   script:
     - npm ci
