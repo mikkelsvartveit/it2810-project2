@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export interface LoginPageProps {
   tokenOnUpdateCallback: (token: string) => void;
@@ -7,11 +8,13 @@ export interface LoginPageProps {
 const LoginPage = () => {
   const [token, setToken] = useState<string>("");
 
+  const navigate = useNavigate();
+
   const tokenSubmitHandler = (event: React.MouseEvent) => {
     event.preventDefault();
     // TODO: Validate token
     window.localStorage.setItem("token", token);
-    window.location.href = "/info";
+    navigate("/stats");
   };
   return (
     <div>

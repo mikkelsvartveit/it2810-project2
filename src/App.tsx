@@ -1,6 +1,5 @@
-import "./App.css";
-import LoginPage from "./ui/LoginPage";
-import InfoPage from "./ui/InfoPage";
+import LoginPage from "./pages/LoginPage";
+import StatsPage from "./pages/StatsPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -8,7 +7,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route path="/info" element={<InfoPage />} />
+        <Route path="/stats" element={<StatsPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,0 +1,65 @@
+@import "./variables.scss";
+
+.react-tabs {
+  -webkit-tap-highlight-color: transparent;
+
+  &__tab-list {
+    border-bottom: 2px solid RGB($theme-color);
+    margin: 0 0 10px;
+    padding: 0;
+  }
+
+  &__tab {
+    font-weight: 600;
+    color: RGB($theme-color);
+    display: inline-block;
+    border: 2px solid transparent;
+    border-bottom: none;
+    bottom: -2px;
+    position: relative;
+    list-style: none;
+    padding: 12px 20px;
+    border-radius: 5px 5px 0 0;
+    cursor: pointer;
+    transition-duration: 0.1s;
+
+    &--selected {
+      background: RGB($theme-color);
+      color: #fff;
+      border-color: RGB($theme-color);
+      border-radius: 5px 5px 0 0;
+    }
+
+    &--disabled {
+      color: GrayText;
+      cursor: default;
+    }
+
+    // on not selected and hover
+    &:not(.react-tabs__tab--selected):hover {
+      color: RGBA($theme-color, 0.7);
+    }
+
+    &:focus {
+      outline: none;
+
+      &:after {
+        content: "";
+        position: absolute;
+        height: 5px;
+        left: -4px;
+        right: -4px;
+        bottom: -5px;
+        background: #fff;
+      }
+    }
+  }
+
+  &__tab-panel {
+    display: none;
+
+    &--selected {
+      display: block;
+    }
+  }
+}
