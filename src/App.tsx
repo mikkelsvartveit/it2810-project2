@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import "./App.css";
 import LoginPage from "./ui/LoginPage";
 import InfoPage from "./ui/InfoPage";
