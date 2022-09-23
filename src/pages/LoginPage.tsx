@@ -16,6 +16,7 @@ const LoginPage = () => {
     window.localStorage.setItem("token", token);
     navigate("/stats");
   };
+
   return (
     <div>
       <h1>GitLab repo analytics</h1>
