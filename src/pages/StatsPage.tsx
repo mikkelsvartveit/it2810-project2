@@ -30,10 +30,12 @@ const InfoPage = () => {
     return (
       <>
         <div className="navbar">
-          <div className="navbar-container">
-            <div>GitLab Analyzer</div>
+          <div className="navbar-content">
             <div>
-              <button onClick={handleLogout}>Logout</button>
+              <span className="navbar-title">GitLab Analyzer</span>
+            </div>
+            <div>
+              <button onClick={handleLogout}>Exit Repo</button>
             </div>
           </div>
         </div>
