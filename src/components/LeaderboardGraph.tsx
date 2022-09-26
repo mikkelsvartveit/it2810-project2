@@ -16,7 +16,7 @@ export const LeaderboardGraph = ({
   category,
   winners,
 }: LeaderboardGraphProps) => {
-  //sort the winners by value
+  //sort the winners by value and switch 1st and 2nd place
   winners.sort((a, b) => b.value - a.value);
   const first = winners[0];
   winners[0] = winners[1];
@@ -24,11 +24,12 @@ export const LeaderboardGraph = ({
 
   const MAX_BAR_BONUS_HEIGHT = 200;
   const MIN_BAR_HEIGHT = 130;
+
   const data = winners.map((winner, key) => {
     const imgPath = "../assets/medals/" + key + "place-medal.svg";
     console.log(imgPath);
     return (
-      <div className="leaderboard winner">
+      <div className="leaderboard winner" key={key}>
         <img
           className="leaderboard image"
           src={winner.imageUrl || "https://picsum.photos/200"}

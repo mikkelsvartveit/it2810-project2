@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import { Leaderboard } from "../components/Leaderboard";
 import "../styles/react-tabs.scss";
 
 const InfoPage = () => {
@@ -48,7 +49,7 @@ const InfoPage = () => {
             </TabList>
 
             <TabPanel>
-              <h2>Leaderboard</h2>
+              <Leaderboard />
             </TabPanel>
 
             <TabPanel>
