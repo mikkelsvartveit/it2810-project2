@@ -7,13 +7,16 @@ export interface LoginPageProps {
 
 const LoginPage = () => {
   const [token, setToken] = useState<string>("");
+  const [repoURI, setRepoURI] = useState<string>("");
 
   const navigate = useNavigate();
 
-  const tokenSubmitHandler = (event: React.MouseEvent) => {
+  const submitHandler = (event: React.MouseEvent) => {
     event.preventDefault();
-    // TODO: Validate token
+    // TODO: Validate token and repoURI
+
     window.localStorage.setItem("token", token);
+    window.localStorage.setItem("repoURI", repoURI);
     navigate("/stats");
   };
 
@@ -24,10 +27,15 @@ const LoginPage = () => {
       <form>
         <input
           type="text"
-          placeholder="API token"
-          onChange={(event) => setToken(event?.target.value)}
+          placeholder="https://gitlab.com/"
+          onChange={(e) => setRepoURI(e.target.value)}
         />
-        <button type="submit" onClick={tokenSubmitHandler}>
+        <input
+          type="text"
+          placeholder="API token"
+          onChange={(event) => setToken(event.target.value)}
+        />
+        <button type="submit" onClick={submitHandler}>
           Submit
         </button>
       </form>

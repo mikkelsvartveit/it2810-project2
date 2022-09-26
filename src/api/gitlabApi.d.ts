@@ -1,6 +1,7 @@
 type toBeDate = string;
 
 export type GitlabProjectURI = `https//:${string}/api/v4/projects/${number}`;
+export type category = "commits" | "issues" | "mergeRequests";
 
 export interface GitlabUser {
   id: number;

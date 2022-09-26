@@ -1,9 +1,10 @@
 import { useState } from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { category } from "../api/gitlabApi";
 
 export interface Option {
   label: string;
-  value: string;
+  value: category;
 }
 
 export interface DropdownProps {
