@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import GraphsComp from "../components/GraphsComp";
 import { Leaderboard } from "../components/Leaderboard";
 import "../styles/react-tabs.scss";
 
@@ -54,6 +55,7 @@ const InfoPage = () => {
 
             <TabPanel>
               <h2>Graphs</h2>
+              <GraphsComp />
             </TabPanel>
           </Tabs>
         </div>

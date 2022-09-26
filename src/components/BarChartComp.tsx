@@ -6,6 +6,7 @@ import {
   Tooltip,
   Legend,
   CartesianGrid,
+  Cell,
 } from "recharts";
 
 export type BarData = Array<{
@@ -18,6 +19,21 @@ type PropType = {
   width: number;
   height: number;
 };
+
+const COLORS = [
+  "#00AE12",
+  "#00AE3E",
+  "#00AE6F",
+  "#00AE9E",
+  "#008EAE",
+  "#005EAE",
+  "#00AE8C",
+  "#00A1AE",
+  "#0070AE",
+  "#0043AE",
+  "#0018AE",
+  "#1700AE",
+];
 
 /**
  *
@@ -32,7 +48,11 @@ const BarChartComp = ({ data, width, height }: PropType) => {
       <CartesianGrid strokeDasharray="1 1" />
       <XAxis dataKey="name" />
       <YAxis />
-      <Bar dataKey="value" />
+      <Bar dataKey="value" fill={COLORS[0]}>
+        {data.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+        ))}
+      </Bar>
       <Tooltip />
       <Legend />
     </BarChart>

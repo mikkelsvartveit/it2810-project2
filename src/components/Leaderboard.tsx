@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+import { category } from "../api/gitlabApi";
 import { getTopThree } from "../util/graphHelper";
 import { Dropdown, Option } from "./Drowdown";
 import { LeaderboardGraph, Winner } from "./LeaderboardGraph";
 
 export const Leaderboard = () => {
-  const options: Option[] = [
+  const options: Option<category>[] = [
     {
       value: "commits",
       label: "Commits",
@@ -19,7 +20,9 @@ export const Leaderboard = () => {
     },
   ];
   const [isLoading, setLoading] = useState(true);
-  const [selectedOption, setSelectedOption] = useState<Option>(options[0]);
+  const [selectedOption, setSelectedOption] = useState<Option<category>>(
+    options[0]
+  );
   const [topThree, setTopThree] = useState<Winner[] | null>(null);
 
   useEffect(() => {

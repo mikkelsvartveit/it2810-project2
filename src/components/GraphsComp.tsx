@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   getApiURI,
   getCommits,
@@ -6,76 +6,122 @@ import {
   getIssues,
 } from "../api/gitlabApiHelpers";
 import type {
-  GitlabProjectURI,
   GitlabMergeRequest,
   GitlabCommit,
   GitlabIssue,
 } from "../api/gitlabApi";
 import BarChartComp, { BarData } from "./BarChartComp";
+import { Dropdown } from "./Drowdown";
 
+// TODO: Fix project link and accestoken from localstorage or context
 const PROJECT_LINK =
   "https://gitlab.stud.idi.ntnu.no/it2810-h22/Team-18/prosjekt2";
-const ACCESS_TOKEN = "glpat-8o5hy6RmsFsUPhpJVFf-";
+const ACCESS_TOKEN = "";
 
-export type GraphTypeSelectOptions = "commits" | "issues" | "merge_requests";
+export type ApiResult = GitlabCommit[] | GitlabIssue[] | GitlabMergeRequest[];
+export type GraphTypeSelect = "commits" | "issues" | "merge_requests";
+export type AggregateBy = "author" | "weekday" | "time_of_day";
+
+const graphTypeOptions: { label: string; value: GraphTypeSelect }[] = [
+  { label: "Commits", value: "commits" },
+  { label: "Issues", value: "issues" },
+  { label: "Merge Requests", value: "merge_requests" },
+];
+
+const aggregateByOptions: { label: string; value: AggregateBy }[] = [
+  { label: "Author", value: "author" },
+  { label: "Weekday", value: "weekday" },
+  { label: "Time of day", value: "time_of_day" },
+];
 
 const filterData = (
-  data: GitlabMergeRequest[] | GitlabCommit[] | GitlabIssue[],
-  queryBy: GraphTypeSelectOptions
+  data: ApiResult,
+  queryBy: GraphTypeSelect,
+  aggregateBy: AggregateBy
 ): BarData => {
-  if (queryBy === "commits") {
-    const commits = data as GitlabCommit[];
-    const commitData: BarData = [];
-    commits.forEach((commit) => {
-      const author = commit.author_name ?? "Not assigned";
-      const index = commitData.findIndex((data) => data.name === author);
-      if (index === -1) {
-        commitData.push({ name: author, value: 1 });
-      } else {
-        commitData[index].value += 1;
-      }
-    });
-    console.log(commitData);
-    return commitData;
-  } else if (queryBy === "issues") {
-    const issues = data as GitlabIssue[];
-    const issueData: BarData = [];
-    issues.forEach((issue) => {
-      const author = issue.author ? issue.author.username : "Not assigned";
-      const index = issueData.findIndex((data) => data.name === author);
-      if (index === -1) {
-        issueData.push({ name: author, value: 1 });
-      } else {
-        issueData[index].value += 1;
-      }
-    });
-    console.log(issueData);
-    return issueData;
-  } else {
-    const mergeRequests = data as GitlabMergeRequest[];
-    const mergeRequestData: BarData = [];
-    mergeRequests.forEach((mergeRequest) => {
-      const author = mergeRequest.author
-        ? mergeRequest.author.username
+  if (aggregateBy === "author") return aggregateByAuthor(data, queryBy);
+  else if (aggregateBy === "weekday") return aggregateByWeekday(data);
+  else if (aggregateBy === "time_of_day") return aggregateByTimeOfDay(data);
+  return [];
+};
+
+const aggregateByAuthor = (
+  data: GitlabCommit[] | GitlabIssue[] | GitlabMergeRequest[],
+  dataType: GraphTypeSelect
+): BarData => {
+  const returnData: BarData = [];
+  data.forEach((post) => {
+    let author = "";
+    if (dataType === "commits") {
+      let post2 = post as GitlabCommit;
+      author = post2.author_email
+        ? post2.author_email.split("@")[0]
         : "Not assigned";
-      const index = mergeRequestData.findIndex((data) => data.name === author);
-      if (index === -1) {
-        mergeRequestData.push({ name: author, value: 1 });
-      } else {
-        mergeRequestData[index].value += 1;
-      }
-    });
-    console.log(mergeRequestData);
-    return mergeRequestData;
-  }
+    } else if (dataType === "merge_requests" || dataType === "issues") {
+      let post2 = post as GitlabMergeRequest;
+      author = post2.author ? post2.author.username : "Not assigned";
+    }
+    const index = returnData.findIndex((data) => data.name === author);
+    if (index === -1) {
+      returnData.push({ name: author, value: 1 });
+    } else {
+      returnData[index].value += 1;
+    }
+  });
+  return returnData;
+};
+
+const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const aggregateByWeekday = (data: ApiResult): BarData => {
+  const toReturn: BarData = [];
+  WEEK_DAYS.forEach((day) => {
+    toReturn.push({ name: day, value: 0 });
+  });
+  data.forEach((post) => {
+    const date = new Date(post.created_at);
+    const weekday = WEEK_DAYS[(date.getDay() + 6) % 7];
+    const index = toReturn.findIndex((data) => data.name === weekday);
+    if (index === -1) {
+      toReturn.push({ name: weekday, value: 1 });
+    } else {
+      toReturn[index].value += 1;
+    }
+  });
+  return toReturn;
+};
+
+const HOUR_INTERVALS = [4, 8, 12, 16, 20, 24];
+const aggregateByTimeOfDay = (data: ApiResult): BarData => {
+  const toReturn: BarData = [];
+  HOUR_INTERVALS.forEach((hour) => {
+    toReturn.push({ name: `${hour - 4}:00-${hour - 1}:59`, value: 0 });
+  });
+  data.forEach((post) => {
+    const date = new Date(post.created_at);
+    const hour = date.getHours();
+    const index = HOUR_INTERVALS.findIndex((interval) => interval > hour);
+    toReturn[index].value += 1;
+  });
+  return toReturn;
 };
 
 const GraphsComp = () => {
-  const [queryBy, setQueryBy] =
-    useState<GraphTypeSelectOptions>("merge_requests");
-  const [data, setData] = useState<
-    GitlabMergeRequest[] | GitlabCommit[] | GitlabIssue[]
-  >([]);
+  /* Make graph take up entire width of parent */
+  const divRef = useRef<null | HTMLDivElement>(null);
+  const [parentWidth, setParentWidth] = useState(0);
+
+  useEffect(() => {
+    if (divRef.current && divRef.current.parentElement)
+      setParentWidth(divRef.current.parentElement.offsetWidth);
+    window.addEventListener("resize", () => {
+      if (divRef.current && divRef.current.parentElement)
+        setParentWidth(divRef.current.parentElement.offsetWidth);
+    });
+  }, [divRef]);
+
+  const [queryBy, setQueryBy] = useState<GraphTypeSelect>("commits");
+  const [aggregateDataBy, setAggregateDataBy] = useState<AggregateBy>("author");
+  const [data, setData] = useState<ApiResult>([]);
 
   useEffect(() => {
     const data = async () => {
@@ -107,19 +153,41 @@ const GraphsComp = () => {
   }, [queryBy]);
 
   return (
-    <div>
-      <div>
-        <select
-          onChange={(e) => setQueryBy(e.target.value as GraphTypeSelectOptions)}
-        >
-          <option value="commits">Commits</option>
-          <option value="issues">Issues</option>
-          <option value="merge_requests">Merge Requests</option>
-        </select>
+    <div ref={(el) => (el ? (divRef.current = el) : null)}>
+      <div style={style.dropdownSection}>
+        <span style={style.dropdownSectionSpan}> Get: </span>
+        <Dropdown
+          options={graphTypeOptions}
+          onSelectedChange={(e) => setQueryBy(e.value)}
+        />
+        <span style={style.dropdownSectionSpan}> Aggregated by: </span>
+        <Dropdown
+          options={aggregateByOptions}
+          onSelectedChange={(e) => setAggregateDataBy(e.value)}
+        />
       </div>
-      <BarChartComp data={filterData(data, queryBy)} width={500} height={300} />
+      <BarChartComp
+        data={filterData(data, queryBy, aggregateDataBy)}
+        width={parentWidth}
+        height={400}
+      />
     </div>
   );
+};
+
+const style = {
+  dropdownSection: {
+    margin: "auto",
+    marginBottom: "20px",
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gridTemplateRows: "1fr, 1fr",
+    gridGap: "10px",
+  },
+  dropdownSectionSpan: {
+    margin: "0 10px",
+    fontSize: "1.5rem",
+  },
 };
 
 export default GraphsComp;
