@@ -43,6 +43,8 @@ function getMergeRequestsPerUser(mergeRequests: GitlabMergeRequest[]) {
 function getIssuesPerUser(issues: GitlabIssue[]) {
   let userIssueMap = new Map<string, number>();
   for (let issue of issues) {
+    // Only count closed issues
+    if (!issue.closed_by) continue;
     let nrIssues: number | undefined = userIssueMap.get(
       issue.closed_by.username
     );
@@ -115,7 +117,5 @@ export const getTopThree = async (
       });
     }
   }
-  console.log(topThree);
-
   return topThree;
 };

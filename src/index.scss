@@ -115,7 +115,7 @@ button {
   &.container {
     display: flex;
     flex-direction: row;
-    align-items: end;
+    align-items: flex-end;
     justify-content: center;
     margin: 0;
     max-width: 800px;
@@ -149,5 +149,6 @@ button {
     width: 100%;
     font-size: 40px;
     text-align: center;
+    transition: all 1s ease;
   }
 }

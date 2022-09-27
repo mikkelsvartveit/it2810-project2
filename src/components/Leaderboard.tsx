@@ -28,15 +28,13 @@ export const Leaderboard = () => {
   useEffect(() => {
     const repoToken = window.localStorage.getItem("token") || "";
     const repoURI = window.localStorage.getItem("repoURI") || "";
-    console.log(repoToken, repoURI);
     getTopThree(selectedOption.value, repoToken, repoURI)
       .then((topThree) => {
-        console.log("Here:" + topThree.length);
         setTopThree(topThree);
         setLoading(false);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   }, [selectedOption]);
 
