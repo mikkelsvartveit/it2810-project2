@@ -13,11 +13,6 @@ import type {
 import BarChartComp, { BarData } from "./BarChartComp";
 import { Dropdown } from "./Drowdown";
 
-// TODO: Fix project link and accestoken from localstorage or context
-const PROJECT_LINK =
-  "https://gitlab.stud.idi.ntnu.no/it2810-h22/Team-18/prosjekt2";
-const ACCESS_TOKEN = "";
-
 export type ApiResult = GitlabCommit[] | GitlabIssue[] | GitlabMergeRequest[];
 export type GraphTypeSelect = "commits" | "issues" | "merge_requests";
 export type AggregateBy = "author" | "weekday" | "time_of_day";
@@ -71,8 +66,8 @@ const aggregateByAuthor = (
   return returnData;
 };
 
-const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const aggregateByWeekday = (data: ApiResult): BarData => {
+  const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const toReturn: BarData = [];
   WEEK_DAYS.forEach((day) => {
     toReturn.push({ name: day, value: 0 });
@@ -90,8 +85,8 @@ const aggregateByWeekday = (data: ApiResult): BarData => {
   return toReturn;
 };
 
-const HOUR_INTERVALS = [4, 8, 12, 16, 20, 24];
 const aggregateByTimeOfDay = (data: ApiResult): BarData => {
+  const HOUR_INTERVALS = [4, 8, 12, 16, 20, 24];
   const toReturn: BarData = [];
   HOUR_INTERVALS.forEach((hour) => {
     toReturn.push({ name: `${hour - 4}:00-${hour - 1}:59`, value: 0 });
@@ -124,26 +119,33 @@ const GraphsComp = () => {
   const [data, setData] = useState<ApiResult>([]);
 
   useEffect(() => {
+    // TODO: change to context
+    const token = window.localStorage.getItem("token") || "";
+    const uri = window.localStorage.getItem("repoURI") || "";
+    if (!token || !uri) {
+      console.error("Missing token or project link");
+      return;
+    }
     const data = async () => {
-      const apiURI = getApiURI(PROJECT_LINK);
+      const apiURI = getApiURI(uri);
       if (!apiURI) {
         setData([]);
         return;
       }
-      let qFunc;
+      let queryFunc;
       switch (queryBy) {
         case "commits":
-          qFunc = getCommits;
+          queryFunc = getCommits;
           break;
         case "issues":
-          qFunc = getIssues;
+          queryFunc = getIssues;
           break;
         case "merge_requests":
-          qFunc = getMergeRequests;
+          queryFunc = getMergeRequests;
           break;
       }
       setData(
-        await qFunc(apiURI, ACCESS_TOKEN).catch((err) => {
+        await queryFunc(apiURI, token).catch((err) => {
           console.error(err);
           return [];
         })

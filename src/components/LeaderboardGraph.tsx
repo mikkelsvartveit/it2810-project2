@@ -26,7 +26,6 @@ export const LeaderboardGraph = ({
   const MIN_BAR_HEIGHT = 130;
 
   const data = winners.map((winner, key) => {
-    const imgPath = "../assets/medals/" + key + "place-medal.svg";
     return (
       <div className="leaderboard winner" key={key}>
         <img

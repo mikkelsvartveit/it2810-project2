@@ -9,16 +9,16 @@ import {
   Cell,
 } from "recharts";
 
-export type BarData = Array<{
+export type BarData = {
   name: string;
   value: number;
-}>;
+}[];
 
-type PropType = {
+interface PropType {
   data: BarData;
   width: number;
   height: number;
-};
+}
 
 const COLORS = [
   "#00AE12",
