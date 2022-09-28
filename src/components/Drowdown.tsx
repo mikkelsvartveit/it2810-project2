@@ -1,25 +1,45 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { category } from "../api/gitlabApi";
 
-export interface Option {
+export interface Option<T> {
   label: string;
-  value: category;
+  value: T;
 }
 
-export interface DropdownProps {
-  options: Option[];
-  selected?: Option;
-  onSelectedChange: (option: Option) => void;
+export interface DropdownProps<T> {
+  options: Option<T>[];
+  selected?: Option<T>;
+  onSelectedChange: (option: Option<T>) => void;
 }
 
-export const Dropdown = ({
+export const Dropdown = <T extends string>({
   options,
   selected,
   onSelectedChange,
-}: DropdownProps) => {
+}: DropdownProps<T>) => {
   const [open, setOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(selected || options[0]);
+
+  // Close dropdown when clicking outside of it
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const listenerEvent = (e: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        e.target &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+    if (open) {
+      document.body.addEventListener("click", listenerEvent, { capture: true });
+    } else {
+      document.body.removeEventListener("click", listenerEvent, {
+        capture: true,
+      });
+    }
+  }, [open]);
 
   const renderedOptions = options.map((option) => {
     if (option.value === selectedOption.value) {
@@ -33,6 +53,7 @@ export const Dropdown = ({
         onClick={() => {
           onSelectedChange(option);
           setSelectedOption(option);
+          setOpen(false);
         }}
       >
         {option.label}
@@ -41,17 +62,17 @@ export const Dropdown = ({
   });
 
   return (
-    <div className="dropdown" onClick={() => setOpen(!open)}>
-      <div className="dropdown label">
+    <div className="dropdown" ref={wrapperRef}>
+      <div className="dropdown label" onClick={() => setOpen(!open)}>
         <div className="dropdown text">{selectedOption.label}</div>
         <ArrowDropDownIcon
           className="dropdown icon"
-          style={{ transform: open ? "rotate(90deg)" : "rotate(0deg)" }}
+          style={{ transform: open ? "rotate(0deg)" : "rotate(-90deg)" }}
         />
       </div>
       <div
         className="dropdown container"
-        style={{ display: open ? "block" : "none" }}
+        style={{ display: open ? "block" : "none", position: "absolute" }}
       >
         {renderedOptions}
       </div>
