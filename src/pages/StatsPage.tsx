@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import GraphsComp from "../components/GraphsComp";
 import { Leaderboard } from "../components/Leaderboard";
+import Navbar from "../components/Navbar";
 import "../styles/react-tabs.scss";
 
 const InfoPage = () => {
@@ -21,26 +21,12 @@ const InfoPage = () => {
     setLoading(false);
   }, [navigate]);
 
-  const handleLogout = () => {
-    window.localStorage.removeItem("token");
-    navigate("/");
-  };
-
   if (isLoading) {
     return <div className="App">Loading...</div>;
   } else {
     return (
       <>
-        <div className="navbar">
-          <div className="navbar-content">
-            <div>
-              <span className="navbar-title">GitLab Analyzer</span>
-            </div>
-            <div>
-              <button onClick={handleLogout}>Exit Repo</button>
-            </div>
-          </div>
-        </div>
+        <Navbar />
 
         <div className="content">
           <Tabs>
