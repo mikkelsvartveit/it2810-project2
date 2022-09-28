@@ -50,6 +50,7 @@ const InfoPage = () => {
             </TabList>
 
             <TabPanel>
+              <h2>Leaderboard</h2>
               <Leaderboard />
             </TabPanel>
 

@@ -185,10 +185,11 @@ const style = {
     gridTemplateColumns: "1fr 1fr",
     gridTemplateRows: "1fr, 1fr",
     gridGap: "10px",
+    alignItems: "center",
   },
   dropdownSectionSpan: {
     margin: "0 10px",
-    fontSize: "1.5rem",
+    fontSize: "18px",
   },
 };
 

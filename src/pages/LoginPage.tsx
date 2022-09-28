@@ -21,25 +21,31 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
-      <h1>GitLab repo analytics</h1>
-      <p>Enter your GitLab API token to get started.</p>
-      <form>
-        <input
-          type="text"
-          placeholder="https://gitlab.com/"
-          onChange={(e) => setRepoURI(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="API token"
-          onChange={(event) => setToken(event.target.value)}
-        />
-        <button type="submit" onClick={submitHandler}>
-          Submit
-        </button>
-      </form>
-    </div>
+    <>
+      <div className="content login">
+        <h1>GitLab Analyzer</h1>
+        <p>Enter your repository URL and an access token to get started.</p>
+        <form>
+          <p className="label">Repository URL:</p>
+          <input
+            type="text"
+            placeholder="https://gitlab.com/<username>/<repo>"
+            onChange={(e) => setRepoURI(e.target.value)}
+          />
+
+          <p className="label">Access token:</p>
+          <input
+            type="text"
+            placeholder="xxxxx-xxxxxx_xxxxxxxxx_xxx"
+            onChange={(event) => setToken(event.target.value)}
+          />
+
+          <button type="submit" onClick={submitHandler}>
+            Submit
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
 export default LoginPage;

@@ -40,8 +40,8 @@ export const Leaderboard = () => {
 
   return (
     <>
-      <div>
-        <h1>Leaderboard</h1>
+      <div className="filter-container">
+        <span>Order by: </span>
         <Dropdown options={options} onSelectedChange={setSelectedOption} />
       </div>
       {isLoading && <h2>Loading...</h2>}
