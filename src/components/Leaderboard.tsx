@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { category } from "../api/gitlabApi";
+import { RepoContext } from "../App";
 import { getTopThree } from "../util/graphHelper";
 import { Dropdown, Option } from "./Drowdown";
 import { LeaderboardGraph, Winner } from "./LeaderboardGraph";
 
 export const Leaderboard = () => {
+  const repoContext = useContext(RepoContext);
   const options: Option<category>[] = [
     {
       value: "commits",
@@ -26,9 +28,15 @@ export const Leaderboard = () => {
   const [topThree, setTopThree] = useState<Winner[] | null>(null);
 
   useEffect(() => {
-    const repoToken = window.localStorage.getItem("token") || "";
-    const repoURI = window.localStorage.getItem("repoURI") || "";
-    getTopThree(selectedOption.value, repoToken, repoURI)
+    if (!repoContext.repoData.repoURI || !repoContext.repoData.repoToken) {
+      return;
+    }
+
+    getTopThree(
+      selectedOption.value,
+      repoContext.repoData.repoToken,
+      repoContext.repoData.repoURI
+    )
       .then((topThree) => {
         setTopThree(topThree);
         setLoading(false);
@@ -36,7 +44,7 @@ export const Leaderboard = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, [selectedOption]);
+  }, [selectedOption, repoContext]);
 
   return (
     <>

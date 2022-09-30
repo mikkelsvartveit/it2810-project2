@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   getApiURI,
   getCommits,
@@ -12,6 +12,7 @@ import type {
 } from "../api/gitlabApi";
 import BarChartComp, { BarData } from "./BarChartComp";
 import { Dropdown } from "./Drowdown";
+import { RepoContext } from "../App";
 
 export type ApiResult = GitlabCommit[] | GitlabIssue[] | GitlabMergeRequest[];
 export type GraphTypeSelect = "commits" | "issues" | "merge_requests";
@@ -104,6 +105,7 @@ const GraphsComp = () => {
   /* Make graph take up entire width of parent */
   const divRef = useRef<null | HTMLDivElement>(null);
   const [parentWidth, setParentWidth] = useState(0);
+  const repoContext = useContext(RepoContext);
 
   useEffect(() => {
     if (divRef.current && divRef.current.parentElement)
@@ -119,9 +121,8 @@ const GraphsComp = () => {
   const [data, setData] = useState<ApiResult>([]);
 
   useEffect(() => {
-    // TODO: change to context
-    const token = window.localStorage.getItem("token") || "";
-    const uri = window.localStorage.getItem("repoURI") || "";
+    const token = repoContext.repoData.repoToken;
+    const uri = repoContext.repoData.repoURI;
     if (!token || !uri) {
       console.error("Missing token or project link");
       return;
@@ -152,7 +153,7 @@ const GraphsComp = () => {
       );
     };
     data();
-  }, [queryBy]);
+  }, [queryBy, repoContext]);
 
   return (
     <div ref={(el) => (el ? (divRef.current = el) : null)}>
