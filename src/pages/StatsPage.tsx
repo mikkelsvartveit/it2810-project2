@@ -1,3 +1,4 @@
+import { CircularProgress } from "@mui/material";
 import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
@@ -82,7 +83,7 @@ const StatsPage = () => {
   }, [repoContext.repoData.repoURI, repoContext.repoData.repoToken]);
 
   if (isLoading) {
-    return <div className="App">Loading...</div>;
+    return <CircularProgress className="leaderboard" size={200} />;
   } else {
     return (
       <>

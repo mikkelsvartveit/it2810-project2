@@ -1,3 +1,4 @@
+import { CircularProgress } from "@mui/material";
 import { useState, useEffect, useMemo } from "react";
 import {
   category,
@@ -78,7 +79,7 @@ export const Leaderboard = ({
           selected={selectedOption}
         />
       </div>
-      {isLoading && <h2>Loading...</h2>}
+      {isLoading && <CircularProgress className="loading" size={200} />}
       {!isLoading && topThree?.length === 3 && (
         <LeaderboardGraph winners={topThree} category={selectedOption.label} />
       )}
