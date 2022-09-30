@@ -55,7 +55,7 @@ const LoginPage = () => {
 
           <p className="label">Access token:</p>
           <input
-            type="text"
+            type="password"
             placeholder="xxxxx-xxxxxx_xxxxxxxxx_xxx"
             onChange={(event) => setToken(event.target.value)}
           />

@@ -55,13 +55,14 @@ const InfoPage = () => {
       );
       const mergeRequests = await getMergeRequests(
         repoContext.repoData.repoURI,
-        repoContext.repoData.repoToken
+        repoContext.repoData.repoToken,
+        "merged"
       );
       const issues = await getIssues(
         repoContext.repoData.repoURI,
-        repoContext.repoData.repoToken
+        repoContext.repoData.repoToken,
+        "closed"
       );
-      console.log("Frick");
       if (debounce) {
         setCommits(commits);
         setMergeRequests(mergeRequests);
@@ -76,7 +77,6 @@ const InfoPage = () => {
     return (
       <>
         <Navbar />
-
         <div className="content">
           <Tabs>
             <TabList>

@@ -8,6 +8,8 @@ const API_V4_PROJECTS = "/api/v4/projects";
 const ENCODED_BACKSLASH = "%2F";
 
 export const getApiURI = (projectLink: string) => {
+  //remove trailing backslash if exists
+  if (projectLink.endsWith("/")) projectLink = projectLink.slice(0, -1);
   // return null if projectLink is not a valid Gitlab link
   if (!projectLink.match(/https:\/\/.*gitlab\..*?\/.+/g)) return null;
 
@@ -41,7 +43,7 @@ export const fetchRequestWithToken = async (
 export const getMergeRequests = async (
   projectURI: GitlabProjectURI,
   accessToken: string,
-  state?: "opened" | "closed" | "locked" | "all"
+  state?: "opened" | "closed" | "locked" | "merged"
 ) => {
   const uri = `${projectURI}/merge_requests?state=${state || "all"}`;
   const fetched = await fetchRequestWithToken(uri, accessToken);
