@@ -21,7 +21,7 @@ interface GraphCompProps {
 
 const graphTypeOptions: { label: string; value: GraphTypeSelect }[] = [
   { label: "Commits", value: "commits" },
-  { label: "Issues", value: "issues" },
+  { label: "Issues Closed", value: "issues" },
   { label: "Merge Requests", value: "merge_requests" },
 ];
 
@@ -72,7 +72,11 @@ const GraphsComp = ({ commits, issues, mergeRequests }: GraphCompProps) => {
           onSelectedChange={(e) => setAggregateDataBy(e.value)}
         />
       </div>
-      <BarChartComp data={graphData} width={parentWidth} height={400} />
+      <BarChartComp
+        data={graphData}
+        width={parentWidth}
+        aggregateBy={aggregateDataBy}
+      />
     </div>
   );
 };

@@ -6,6 +6,7 @@ export type category = "commits" | "issues" | "mergeRequests";
 export interface GitlabUser {
   id: number;
   username: string;
+  name?: string;
   state: "active" | "blocked" | "inactive";
   avatar_url: string | null;
   web_url: string;

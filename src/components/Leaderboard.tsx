@@ -9,7 +9,7 @@ import { RepoContext } from "../App";
 import { aggregateByAuthor } from "../util/graphHelper";
 import { BarData } from "./BarChartComp";
 import { Dropdown, Option } from "./Drowdown";
-import { LeaderboardGraph, Winner } from "./LeaderboardGraph";
+import { LeaderboardGraph } from "./LeaderboardGraph";
 
 interface LeaderboardCompProps {
   commits: GitlabCommit[];
@@ -22,7 +22,6 @@ export const Leaderboard = ({
   issues,
   mergeRequests,
 }: LeaderboardCompProps) => {
-  const repoContext = useContext(RepoContext);
   const options: Option<category>[] = [
     {
       value: "commits",
@@ -34,7 +33,7 @@ export const Leaderboard = ({
     },
     {
       value: "issues",
-      label: "Issues",
+      label: "Issues Closed",
     },
   ];
   const [isLoading, setLoading] = useState(true);
@@ -52,7 +51,6 @@ export const Leaderboard = ({
       toReturn = aggregateByAuthor(mergeRequests, "merge_requests");
     if (toReturn.length > 0) {
       toReturn.sort((a, b) => a.value - b.value);
-      console.log("que");
       setLoading(false);
       return toReturn.splice(-3);
     }

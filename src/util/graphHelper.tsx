@@ -4,19 +4,12 @@ import {
   GitlabIssue,
   GitlabMergeRequest,
 } from "../api/gitlabApi";
-import {
-  getApiURI,
-  getCommits,
-  getIssues,
-  getMergeRequests,
-} from "../api/gitlabApiHelpers";
 import { BarData } from "../components/BarChartComp";
 import {
   AggregateBy,
   ApiResult,
   GraphTypeSelect,
 } from "../components/GraphsComp";
-import { Winner } from "../components/LeaderboardGraph";
 
 export const filterData = (
   data: ApiResult,
@@ -36,18 +29,31 @@ export const aggregateByAuthor = (
   const returnData: BarData = [];
   data.forEach((post) => {
     let author = "";
+    let imgUrl = undefined;
     if (dataType === "commits") {
       let post2 = post as GitlabCommit;
-      author = post2.author_email
-        ? post2.author_email.split("@")[0]
-        : "Not assigned";
-    } else if (dataType === "merge_requests" || dataType === "issues") {
+      author = post2.author_name ? post2.author_name : "Not assigned";
+    } else if (dataType === "merge_requests") {
       let post2 = post as GitlabMergeRequest;
-      author = post2.author ? post2.author.username : "Not assigned";
+
+      author = post2.author.name ? post2.author.name : "Not assigned";
+      imgUrl =
+        post2.author && post2.author.avatar_url
+          ? post2.author.avatar_url
+          : undefined;
+    } else if (dataType === "issues") {
+      let post2 = post as GitlabIssue;
+      author = post2.closed_by.username
+        ? post2.closed_by.username
+        : "Not assigned";
+      imgUrl =
+        post2.closed_by && post2.closed_by.avatar_url
+          ? post2.closed_by.avatar_url
+          : undefined;
     }
     const index = returnData.findIndex((data) => data.name === author);
     if (index === -1) {
-      returnData.push({ name: author, value: 1 });
+      returnData.push({ name: author, value: 1, imgUrl: imgUrl });
     } else {
       returnData[index].value += 1;
     }
@@ -78,7 +84,7 @@ export const aggregateByTimeOfDay = (data: ApiResult): BarData => {
   const HOUR_INTERVALS = [4, 8, 12, 16, 20, 24];
   const toReturn: BarData = [];
   HOUR_INTERVALS.forEach((hour) => {
-    toReturn.push({ name: `${hour - 4}:00-${hour - 1}:59`, value: 0 });
+    toReturn.push({ name: `${hour - 4}:00 - ${hour - 1}:59`, value: 0 });
   });
   data.forEach((post) => {
     const date = new Date(post.created_at);
