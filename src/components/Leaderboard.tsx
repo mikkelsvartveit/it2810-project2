@@ -1,11 +1,27 @@
-import { useState, useEffect, useContext } from "react";
-import { category } from "../api/gitlabApi";
+import { useState, useEffect, useContext, useMemo } from "react";
+import {
+  category,
+  GitlabCommit,
+  GitlabIssue,
+  GitlabMergeRequest,
+} from "../api/gitlabApi";
 import { RepoContext } from "../App";
-import { getTopThree } from "../util/graphHelper";
+import { aggregateByAuthor } from "../util/graphHelper";
+import { BarData } from "./BarChartComp";
 import { Dropdown, Option } from "./Drowdown";
 import { LeaderboardGraph, Winner } from "./LeaderboardGraph";
 
-export const Leaderboard = () => {
+interface LeaderboardCompProps {
+  commits: GitlabCommit[];
+  issues: GitlabIssue[];
+  mergeRequests: GitlabMergeRequest[];
+}
+
+export const Leaderboard = ({
+  commits,
+  issues,
+  mergeRequests,
+}: LeaderboardCompProps) => {
   const repoContext = useContext(RepoContext);
   const options: Option<category>[] = [
     {
@@ -25,26 +41,23 @@ export const Leaderboard = () => {
   const [selectedOption, setSelectedOption] = useState<Option<category>>(
     options[0]
   );
-  const [topThree, setTopThree] = useState<Winner[] | null>(null);
 
-  useEffect(() => {
-    if (!repoContext.repoData.repoURI || !repoContext.repoData.repoToken) {
-      return;
+  const topThree = useMemo(() => {
+    let toReturn: BarData = [];
+    if (selectedOption.value === "commits")
+      toReturn = aggregateByAuthor(commits, "commits");
+    else if (selectedOption.value === "issues")
+      toReturn = aggregateByAuthor(issues, "issues");
+    else if (selectedOption.value === "mergeRequests")
+      toReturn = aggregateByAuthor(mergeRequests, "merge_requests");
+    if (toReturn.length > 0) {
+      toReturn.sort((a, b) => a.value - b.value);
+      console.log("que");
+      setLoading(false);
+      return toReturn.splice(-3);
     }
-
-    getTopThree(
-      selectedOption.value,
-      repoContext.repoData.repoToken,
-      repoContext.repoData.repoURI
-    )
-      .then((topThree) => {
-        setTopThree(topThree);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [selectedOption, repoContext]);
+    return [];
+  }, [selectedOption, commits, issues, mergeRequests]);
 
   return (
     <>

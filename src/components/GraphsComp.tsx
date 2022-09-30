@@ -1,10 +1,5 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import {
-  getApiURI,
-  getCommits,
-  getMergeRequests,
-  getIssues,
-} from "../api/gitlabApiHelpers";
+import { useEffect, useMemo, useRef, useState } from "react";
+
 import type {
   GitlabMergeRequest,
   GitlabCommit,
@@ -12,7 +7,7 @@ import type {
 } from "../api/gitlabApi";
 import BarChartComp, { BarData } from "./BarChartComp";
 import { Dropdown } from "./Drowdown";
-import { RepoContext } from "../App";
+import { filterData } from "../util/graphHelper";
 
 export type ApiResult = GitlabCommit[] | GitlabIssue[] | GitlabMergeRequest[];
 export type GraphTypeSelect = "commits" | "issues" | "merge_requests";
@@ -35,77 +30,6 @@ const aggregateByOptions: { label: string; value: AggregateBy }[] = [
   { label: "Weekday", value: "weekday" },
   { label: "Time of day", value: "time_of_day" },
 ];
-
-export const filterData = (
-  data: ApiResult,
-  queryBy: GraphTypeSelect,
-  aggregateBy: AggregateBy
-): BarData => {
-  if (aggregateBy === "author") return aggregateByAuthor(data, queryBy);
-  else if (aggregateBy === "weekday") return aggregateByWeekday(data);
-  else if (aggregateBy === "time_of_day") return aggregateByTimeOfDay(data);
-  return [];
-};
-
-const aggregateByAuthor = (
-  data: GitlabCommit[] | GitlabIssue[] | GitlabMergeRequest[],
-  dataType: GraphTypeSelect
-): BarData => {
-  const returnData: BarData = [];
-  data.forEach((post) => {
-    let author = "";
-    if (dataType === "commits") {
-      let post2 = post as GitlabCommit;
-      author = post2.author_email
-        ? post2.author_email.split("@")[0]
-        : "Not assigned";
-    } else if (dataType === "merge_requests" || dataType === "issues") {
-      let post2 = post as GitlabMergeRequest;
-      author = post2.author ? post2.author.username : "Not assigned";
-    }
-    const index = returnData.findIndex((data) => data.name === author);
-    if (index === -1) {
-      returnData.push({ name: author, value: 1 });
-    } else {
-      returnData[index].value += 1;
-    }
-  });
-  return returnData;
-};
-
-const aggregateByWeekday = (data: ApiResult): BarData => {
-  const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const toReturn: BarData = [];
-  WEEK_DAYS.forEach((day) => {
-    toReturn.push({ name: day, value: 0 });
-  });
-  data.forEach((post) => {
-    const date = new Date(post.created_at);
-    const weekday = WEEK_DAYS[(date.getDay() + 6) % 7];
-    const index = toReturn.findIndex((data) => data.name === weekday);
-    if (index === -1) {
-      toReturn.push({ name: weekday, value: 1 });
-    } else {
-      toReturn[index].value += 1;
-    }
-  });
-  return toReturn;
-};
-
-const aggregateByTimeOfDay = (data: ApiResult): BarData => {
-  const HOUR_INTERVALS = [4, 8, 12, 16, 20, 24];
-  const toReturn: BarData = [];
-  HOUR_INTERVALS.forEach((hour) => {
-    toReturn.push({ name: `${hour - 4}:00-${hour - 1}:59`, value: 0 });
-  });
-  data.forEach((post) => {
-    const date = new Date(post.created_at);
-    const hour = date.getHours();
-    const index = HOUR_INTERVALS.findIndex((interval) => interval > hour);
-    toReturn[index].value += 1;
-  });
-  return toReturn;
-};
 
 const GraphsComp = ({ commits, issues, mergeRequests }: GraphCompProps) => {
   /* Make graph take up entire width of parent */

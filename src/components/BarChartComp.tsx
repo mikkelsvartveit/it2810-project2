@@ -12,6 +12,7 @@ import {
 export type BarData = {
   name: string;
   value: number;
+  imgUrl?: string;
 }[];
 
 interface PropType {
