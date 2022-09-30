@@ -24,7 +24,7 @@ export const LeaderboardGraph = ({
 
   const data = winners.map((winner, key) => {
     return (
-      <div className="leaderboard winner" key={key}>
+      <div className="leaderboard winner" key={key} data-testid={key}>
         <img
           className="leaderboard image"
           src={winner.imgUrl || PersonImage}
