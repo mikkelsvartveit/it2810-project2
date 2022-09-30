@@ -207,3 +207,12 @@ button {
     transition: all 1s ease;
   }
 }
+
+.loading {
+  position: relative;
+  top: calc(50% - 100px);
+  left: calc(50% - 100px);
+  svg {
+    color: RGB($theme-color);
+  }
+}
