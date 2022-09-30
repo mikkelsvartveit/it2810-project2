@@ -13,7 +13,6 @@ import type {
 import BarChartComp, { BarData } from "./BarChartComp";
 import { Dropdown, Option } from "./Dropdown";
 import { RepoContext } from "../App";
-import { QueryBy } from "@testing-library/react";
 
 export type ApiResult = GitlabCommit[] | GitlabIssue[] | GitlabMergeRequest[];
 export type GraphTypeSelect = "commits" | "issues" | "merge_requests";

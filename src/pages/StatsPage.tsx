@@ -28,7 +28,7 @@ const StatsPage = () => {
 
   const onChangeTab = (index: number) => {
     sessionStorage.setItem("tabIndex", index.toString());
-  }
+  };
 
   if (isLoading) {
     return <div className="App">Loading...</div>;
