@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   getApiURI,
   getCommits,
@@ -18,6 +18,12 @@ export type ApiResult = GitlabCommit[] | GitlabIssue[] | GitlabMergeRequest[];
 export type GraphTypeSelect = "commits" | "issues" | "merge_requests";
 export type AggregateBy = "author" | "weekday" | "time_of_day";
 
+interface GraphCompProps {
+  commits: GitlabCommit[];
+  issues: GitlabIssue[];
+  mergeRequests: GitlabMergeRequest[];
+}
+
 const graphTypeOptions: { label: string; value: GraphTypeSelect }[] = [
   { label: "Commits", value: "commits" },
   { label: "Issues", value: "issues" },
@@ -30,7 +36,7 @@ const aggregateByOptions: { label: string; value: AggregateBy }[] = [
   { label: "Time of day", value: "time_of_day" },
 ];
 
-const filterData = (
+export const filterData = (
   data: ApiResult,
   queryBy: GraphTypeSelect,
   aggregateBy: AggregateBy
@@ -101,11 +107,10 @@ const aggregateByTimeOfDay = (data: ApiResult): BarData => {
   return toReturn;
 };
 
-const GraphsComp = () => {
+const GraphsComp = ({ commits, issues, mergeRequests }: GraphCompProps) => {
   /* Make graph take up entire width of parent */
   const divRef = useRef<null | HTMLDivElement>(null);
   const [parentWidth, setParentWidth] = useState(0);
-  const repoContext = useContext(RepoContext);
 
   useEffect(() => {
     if (divRef.current && divRef.current.parentElement)
@@ -118,42 +123,16 @@ const GraphsComp = () => {
 
   const [queryBy, setQueryBy] = useState<GraphTypeSelect>("commits");
   const [aggregateDataBy, setAggregateDataBy] = useState<AggregateBy>("author");
-  const [data, setData] = useState<ApiResult>([]);
 
-  useEffect(() => {
-    const token = repoContext.repoData.repoToken;
-    const uri = repoContext.repoData.repoURI;
-    if (!token || !uri) {
-      console.error("Missing token or project link");
-      return;
-    }
-    const data = async () => {
-      const apiURI = getApiURI(uri);
-      if (!apiURI) {
-        setData([]);
-        return;
-      }
-      let queryFunc;
-      switch (queryBy) {
-        case "commits":
-          queryFunc = getCommits;
-          break;
-        case "issues":
-          queryFunc = getIssues;
-          break;
-        case "merge_requests":
-          queryFunc = getMergeRequests;
-          break;
-      }
-      setData(
-        await queryFunc(apiURI, token).catch((err) => {
-          console.error(err);
-          return [];
-        })
-      );
-    };
-    data();
-  }, [queryBy, repoContext]);
+  const graphData = useMemo(() => {
+    if (queryBy === "commits")
+      return filterData(commits, queryBy, aggregateDataBy);
+    else if (queryBy === "issues")
+      return filterData(issues, queryBy, aggregateDataBy);
+    else if (queryBy === "merge_requests")
+      return filterData(mergeRequests, queryBy, aggregateDataBy);
+    return [];
+  }, [queryBy, aggregateDataBy]);
 
   return (
     <div ref={(el) => (el ? (divRef.current = el) : null)}>
@@ -169,11 +148,7 @@ const GraphsComp = () => {
           onSelectedChange={(e) => setAggregateDataBy(e.value)}
         />
       </div>
-      <BarChartComp
-        data={filterData(data, queryBy, aggregateDataBy)}
-        width={parentWidth}
-        height={400}
-      />
+      <BarChartComp data={graphData} width={parentWidth} height={400} />
     </div>
   );
 };
