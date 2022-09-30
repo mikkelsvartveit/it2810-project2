@@ -62,7 +62,7 @@ export const getCommits = async (
   projectURI: GitlabProjectURI,
   accessToken: string
 ) => {
-  const uri = `${projectURI}/repository/commits?all=true&per_page=10000`;
+  const uri = `${projectURI}/repository/commits?per_page=10000`;
   const fetched = await fetchRequestWithToken(uri, accessToken);
 
   if (fetched.status !== 200) {
