@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login Page renders correctly 1`] = `
+<div>
+  <h1>
+    GitLab repo analytics
+  </h1>
+  <p>
+    Enter your GitLab API token to get started.
+  </p>
+  <form>
+    <input
+      onChange={[Function]}
+      placeholder="https://gitlab.com/"
+      type="text"
+    />
+    <input
+      onChange={[Function]}
+      placeholder="API token"
+      type="text"
+    />
+    <button
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
