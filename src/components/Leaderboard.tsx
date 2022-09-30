@@ -1,12 +1,26 @@
-import { useState, useEffect, useContext } from "react";
-import { category } from "../api/gitlabApi";
-import { RepoContext } from "../App";
-import { getTopThree } from "../util/graphHelper";
+import { useState, useEffect, useMemo } from "react";
+import {
+  category,
+  GitlabCommit,
+  GitlabIssue,
+  GitlabMergeRequest,
+} from "../api/gitlabApi";
+import { aggregateByAuthor } from "../util/graphHelper";
+import { BarData } from "./BarChartComp";
 import { Dropdown, Option } from "./Dropdown";
-import { LeaderboardGraph, Winner } from "./LeaderboardGraph";
+import { LeaderboardGraph } from "./LeaderboardGraph";
 
-export const Leaderboard = () => {
-  const repoContext = useContext(RepoContext);
+interface LeaderboardCompProps {
+  commits: GitlabCommit[];
+  issues: GitlabIssue[];
+  mergeRequests: GitlabMergeRequest[];
+}
+
+export const Leaderboard = ({
+  commits,
+  issues,
+  mergeRequests,
+}: LeaderboardCompProps) => {
   const options: Option<category>[] = [
     {
       value: "commits",
@@ -18,14 +32,29 @@ export const Leaderboard = () => {
     },
     {
       value: "issues",
-      label: "Issues",
+      label: "Issues Closed",
     },
   ];
   const [isLoading, setLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState<Option<category>>(
     options[0]
   );
-  const [topThree, setTopThree] = useState<Winner[] | null>(null);
+
+  const topThree = useMemo(() => {
+    let toReturn: BarData = [];
+    if (selectedOption.value === "commits")
+      toReturn = aggregateByAuthor(commits, "commits");
+    else if (selectedOption.value === "issues")
+      toReturn = aggregateByAuthor(issues, "issues");
+    else if (selectedOption.value === "mergeRequests")
+      toReturn = aggregateByAuthor(mergeRequests, "merge_requests");
+    if (toReturn.length > 0) {
+      toReturn.sort((a, b) => a.value - b.value);
+      setLoading(false);
+      return toReturn.splice(-3);
+    }
+    return [];
+  }, [selectedOption, commits, issues, mergeRequests]);
 
   useEffect(() => {
     if (sessionStorage.getItem("leaderboardOrderBy")) {
@@ -34,26 +63,6 @@ export const Leaderboard = () => {
       );
     }
   }, []);
-
-  useEffect(() => {
-    if (!repoContext.repoData.repoURI || !repoContext.repoData.repoToken) {
-      return;
-    }
-
-    getTopThree(
-      selectedOption.value,
-      repoContext.repoData.repoToken,
-      repoContext.repoData.repoURI
-    )
-      .then((topThree) => {
-        setTopThree(topThree);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [selectedOption, repoContext]);
-
   const handleSelect = (option: Option<category>) => {
     setSelectedOption(option);
     sessionStorage.setItem("leaderboardOrderBy", JSON.stringify(option));

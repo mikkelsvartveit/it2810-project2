@@ -2,14 +2,15 @@ import LoginPage from "./pages/LoginPage";
 import StatsPage from "./pages/StatsPage";
 import { Routes, Route, HashRouter } from "react-router-dom";
 import { createContext, useState } from "react";
+import { GitlabProjectURI } from "./api/gitlabApi";
 
 export interface repoData {
-  repoURI: string | null;
+  repoURI: GitlabProjectURI | null;
   repoToken: string | null;
 }
 
 const startData: repoData = {
-  repoURI: localStorage.getItem("repoURI"),
+  repoURI: localStorage.getItem("repoURI") as GitlabProjectURI,
   repoToken: localStorage.getItem("repoToken"),
 };
 

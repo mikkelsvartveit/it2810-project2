@@ -1,121 +1,93 @@
 import {
-  category,
   GitlabCommit,
   GitlabIssue,
   GitlabMergeRequest,
 } from "../api/gitlabApi";
+import { BarData } from "../components/BarChartComp";
 import {
-  getApiURI,
-  getCommits,
-  getIssues,
-  getMergeRequests,
-} from "../api/gitlabApiHelpers";
-import { Winner } from "../components/LeaderboardGraph";
+  AggregateBy,
+  ApiResult,
+  GraphTypeSelect,
+} from "../components/GraphsComp";
 
-function getCommitsPerUser(commits: GitlabCommit[]) {
-  let userCommitsMap = new Map<string, number>();
-  for (let commit of commits) {
-    let nrCommits: number | undefined = userCommitsMap.get(commit.author_name);
-    if (nrCommits === undefined) {
-      userCommitsMap.set(commit.author_name, 1);
-    } else {
-      userCommitsMap.set(commit.author_name, nrCommits + 1);
+export const filterData = (
+  data: ApiResult,
+  queryBy: GraphTypeSelect,
+  aggregateBy: AggregateBy
+): BarData => {
+  if (aggregateBy === "author") return aggregateByAuthor(data, queryBy);
+  else if (aggregateBy === "weekday") return aggregateByWeekday(data);
+  else if (aggregateBy === "time_of_day") return aggregateByTimeOfDay(data);
+  return [];
+};
+
+export const aggregateByAuthor = (
+  data: GitlabCommit[] | GitlabIssue[] | GitlabMergeRequest[],
+  dataType: GraphTypeSelect
+): BarData => {
+  const returnData: BarData = [];
+  data.forEach((post) => {
+    let author = "";
+    let imgUrl = undefined;
+    if (dataType === "commits") {
+      let post2 = post as GitlabCommit;
+      author = post2.author_name ? post2.author_name : "Not assigned";
+    } else if (dataType === "merge_requests") {
+      let post2 = post as GitlabMergeRequest;
+
+      author = post2.author.name ? post2.author.name : "Not assigned";
+      imgUrl =
+        post2.author && post2.author.avatar_url
+          ? post2.author.avatar_url
+          : undefined;
+    } else if (dataType === "issues") {
+      let post2 = post as GitlabIssue;
+      author = post2.closed_by.name ? post2.closed_by.name : "Not assigned";
+      imgUrl =
+        post2.closed_by && post2.closed_by.avatar_url
+          ? post2.closed_by.avatar_url
+          : undefined;
     }
-  }
-  return userCommitsMap;
-}
-
-function getMergeRequestsPerUser(mergeRequests: GitlabMergeRequest[]) {
-  let userMergeRequestMap = new Map<string, number>();
-  for (let mergeRequest of mergeRequests) {
-    let nrMergeRequest: number | undefined = userMergeRequestMap.get(
-      mergeRequest.author.username
-    );
-    if (nrMergeRequest === undefined) {
-      userMergeRequestMap.set(mergeRequest.author.username, 1);
+    const index = returnData.findIndex((data) => data.name === author);
+    if (index === -1) {
+      returnData.push({ name: author, value: 1, imgUrl: imgUrl });
     } else {
-      userMergeRequestMap.set(mergeRequest.author.username, nrMergeRequest + 1);
+      returnData[index].value += 1;
     }
-  }
-  return userMergeRequestMap;
-}
-
-function getIssuesPerUser(issues: GitlabIssue[]) {
-  let userIssueMap = new Map<string, number>();
-  for (let issue of issues) {
-    // Only count closed issues
-    if (!issue.closed_by) continue;
-    let nrIssues: number | undefined = userIssueMap.get(
-      issue.closed_by.username
-    );
-    if (nrIssues === undefined) {
-      userIssueMap.set(issue.closed_by.username, 1);
-    } else {
-      userIssueMap.set(issue.closed_by.username, nrIssues + 1);
-    }
-  }
-  return userIssueMap;
-}
-
-function getSortedMatrix(userInstancesMap: Map<string, number>) {
-  const sortedInstancesMatrix = new Array<[string, number]>();
-  userInstancesMap.forEach((value, key) => {
-    sortedInstancesMatrix.push([key, value]);
   });
+  return returnData;
+};
 
-  for (let i = 1; i < sortedInstancesMatrix.length - 1; i++) {
-    for (let k = 0; k < sortedInstancesMatrix.length - 1; k++) {
-      if (sortedInstancesMatrix[k][1] < sortedInstancesMatrix[k + 1][1]) {
-        let temp = sortedInstancesMatrix[i];
-        sortedInstancesMatrix[k] = sortedInstancesMatrix[k + 1];
-        sortedInstancesMatrix[k + 1] = temp;
-      }
+export const aggregateByWeekday = (data: ApiResult): BarData => {
+  const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const toReturn: BarData = [];
+  WEEK_DAYS.forEach((day) => {
+    toReturn.push({ name: day, value: 0 });
+  });
+  data.forEach((post) => {
+    const date = new Date(post.created_at);
+    const weekday = WEEK_DAYS[(date.getDay() + 6) % 7];
+    const index = toReturn.findIndex((data) => data.name === weekday);
+    if (index === -1) {
+      toReturn.push({ name: weekday, value: 1 });
+    } else {
+      toReturn[index].value += 1;
     }
-  }
-  return sortedInstancesMatrix;
-}
-export const getTopThree = async (
-  category: category,
-  token: string,
-  repoURI: string
-) => {
-  const topThree: Winner[] = [];
-  const apiURI = getApiURI(repoURI);
-  if (apiURI) {
-    if (category === "commits") {
-      await getCommits(apiURI, token).then((commits) => {
-        const commitsPerUser = getCommitsPerUser(commits);
-        const sortedCommitsMatrix = getSortedMatrix(commitsPerUser);
-        for (let i = 0; i < 3; i++) {
-          topThree.push({
-            name: sortedCommitsMatrix[i][0],
-            value: sortedCommitsMatrix[i][1],
-          });
-        }
-      });
-    } else if (category === "mergeRequests") {
-      await getMergeRequests(apiURI, token).then((mergeRequests) => {
-        const mergeRequestsPerUser = getMergeRequestsPerUser(mergeRequests);
-        const sortedMergeRequestsMatrix = getSortedMatrix(mergeRequestsPerUser);
-        for (let i = 0; i < 3; i++) {
-          topThree.push({
-            name: sortedMergeRequestsMatrix[i][0],
-            value: sortedMergeRequestsMatrix[i][1],
-          });
-        }
-      });
-    } else if (category === "issues") {
-      await getIssues(apiURI, token).then((issues) => {
-        const issuesPerUser = getIssuesPerUser(issues);
-        const sortedIssuesMatrix = getSortedMatrix(issuesPerUser);
-        for (let i = 0; i < 3; i++) {
-          topThree.push({
-            name: sortedIssuesMatrix[i][0],
-            value: sortedIssuesMatrix[i][1],
-          });
-        }
-      });
-    }
-  }
-  return topThree;
+  });
+  return toReturn;
+};
+
+export const aggregateByTimeOfDay = (data: ApiResult): BarData => {
+  const HOUR_INTERVALS = [4, 8, 12, 16, 20, 24];
+  const toReturn: BarData = [];
+  HOUR_INTERVALS.forEach((hour) => {
+    toReturn.push({ name: `${hour - 4}:00 - ${hour - 1}:59`, value: 0 });
+  });
+  data.forEach((post) => {
+    const date = new Date(post.created_at);
+    const hour = date.getHours();
+    const index = HOUR_INTERVALS.findIndex((interval) => interval > hour);
+    toReturn[index].value += 1;
+  });
+  return toReturn;
 };
