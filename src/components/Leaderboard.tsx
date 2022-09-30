@@ -28,6 +28,14 @@ export const Leaderboard = () => {
   const [topThree, setTopThree] = useState<Winner[] | null>(null);
 
   useEffect(() => {
+    if (sessionStorage.getItem("leaderboardOrderBy")) {
+      setSelectedOption(
+        JSON.parse(sessionStorage.getItem("leaderboardOrderBy") || "")
+      );
+    }
+  }, []);
+
+  useEffect(() => {
     if (!repoContext.repoData.repoURI || !repoContext.repoData.repoToken) {
       return;
     }
@@ -46,11 +54,20 @@ export const Leaderboard = () => {
       });
   }, [selectedOption, repoContext]);
 
+  const handleSelect = (option: Option<category>) => {
+    setSelectedOption(option);
+    sessionStorage.setItem("leaderboardOrderBy", JSON.stringify(option));
+  };
+
   return (
     <>
       <div className="filter-container">
         <span>Order by: </span>
-        <Dropdown options={options} onSelectedChange={setSelectedOption} />
+        <Dropdown
+          options={options}
+          onSelectedChange={handleSelect}
+          selected={selectedOption}
+        />
       </div>
       {isLoading && <h2>Loading...</h2>}
       {!isLoading && topThree?.length === 3 && (
