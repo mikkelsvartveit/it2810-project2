@@ -11,7 +11,7 @@ import type {
   GitlabIssue,
 } from "../api/gitlabApi";
 import BarChartComp, { BarData } from "./BarChartComp";
-import { Dropdown } from "./Drowdown";
+import { Dropdown, Option } from "./Dropdown";
 import { RepoContext } from "../App";
 
 export type ApiResult = GitlabCommit[] | GitlabIssue[] | GitlabMergeRequest[];
@@ -107,6 +107,29 @@ const GraphsComp = () => {
   const [parentWidth, setParentWidth] = useState(0);
   const repoContext = useContext(RepoContext);
 
+  const [preSelectedGraphType, setPreSelectedGraphType] = useState<
+    Option<GraphTypeSelect> | undefined
+  >(undefined);
+  const [preSelectedAggregateDataBy, setPreSelectedAggregateDataBy] = useState<
+    Option<AggregateBy> | undefined
+  >(undefined);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("graphQueryBy")) {
+      const queryBy = JSON.parse(sessionStorage.getItem("graphQueryBy") || "");
+      setPreSelectedGraphType(queryBy);
+      setQueryBy(queryBy.value);
+    }
+
+    if (sessionStorage.getItem("graphAggregateDataBy")) {
+      const aggregateDataBy = JSON.parse(
+        sessionStorage.getItem("graphAggregateDataBy") || ""
+      );
+      setPreSelectedAggregateDataBy(aggregateDataBy);
+      setAggregateDataBy(aggregateDataBy.value);
+    }
+  }, []);
+
   useEffect(() => {
     if (divRef.current && divRef.current.parentElement)
       setParentWidth(divRef.current.parentElement.offsetWidth);
@@ -155,18 +178,30 @@ const GraphsComp = () => {
     data();
   }, [queryBy, repoContext]);
 
+  const handleSelectQueryBy = (option: Option<any>) => {
+    sessionStorage.setItem("graphQueryBy", JSON.stringify(option));
+    setQueryBy(option.value);
+  };
+
+  const handleSelectAggregateDataBy = (option: Option<any>) => {
+    sessionStorage.setItem("graphAggregateDataBy", JSON.stringify(option));
+    setAggregateDataBy(option.value);
+  };
+
   return (
     <div ref={(el) => (el ? (divRef.current = el) : null)}>
       <div style={style.dropdownSection}>
         <span style={style.dropdownSectionSpan}> Get: </span>
         <Dropdown
           options={graphTypeOptions}
-          onSelectedChange={(e) => setQueryBy(e.value)}
+          onSelectedChange={handleSelectQueryBy}
+          selected={preSelectedGraphType}
         />
         <span style={style.dropdownSectionSpan}> Aggregated by: </span>
         <Dropdown
           options={aggregateByOptions}
-          onSelectedChange={(e) => setAggregateDataBy(e.value)}
+          onSelectedChange={handleSelectAggregateDataBy}
+          selected={preSelectedAggregateDataBy}
         />
       </div>
       <BarChartComp

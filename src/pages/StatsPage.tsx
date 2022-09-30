@@ -7,18 +7,28 @@ import { Leaderboard } from "../components/Leaderboard";
 import Navbar from "../components/Navbar";
 import "../styles/react-tabs.scss";
 
-const InfoPage = () => {
+const StatsPage = () => {
   const [isLoading, setLoading] = useState(true);
   const repoContext = useContext(RepoContext);
   const navigate = useNavigate();
+
+  const [defaultTabIndex, setDefaultTabIndex] = useState(0);
 
   useEffect(() => {
     if (!repoContext.repoData.repoURI || !repoContext.repoData.repoToken) {
       navigate("/");
     }
 
+    if (sessionStorage.getItem("tabIndex")) {
+      setDefaultTabIndex(Number(sessionStorage.getItem("tabIndex")));
+    }
+
     setLoading(false);
   }, [navigate, repoContext]);
+
+  const onChangeTab = (index: number) => {
+    sessionStorage.setItem("tabIndex", index.toString());
+  };
 
   if (isLoading) {
     return <div className="App">Loading...</div>;
@@ -28,7 +38,7 @@ const InfoPage = () => {
         <Navbar />
 
         <div className="content">
-          <Tabs>
+          <Tabs defaultIndex={defaultTabIndex} onSelect={onChangeTab}>
             <TabList>
               <Tab>Leaderboard</Tab>
               <Tab>Graphs</Tab>
@@ -49,4 +59,4 @@ const InfoPage = () => {
     );
   }
 };
-export default InfoPage;
+export default StatsPage;
