@@ -9,9 +9,7 @@ import {
   Cell,
   PieChart,
   Pie,
-  PieLabel,
 } from "recharts";
-import { HorizontalAlignmentType } from "recharts/types/component/DefaultLegendContent";
 import { AggregateBy } from "./GraphsComp";
 
 export interface BarProp {

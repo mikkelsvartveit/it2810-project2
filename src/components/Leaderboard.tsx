@@ -1,14 +1,13 @@
-import { useState, useEffect, useContext, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   category,
   GitlabCommit,
   GitlabIssue,
   GitlabMergeRequest,
 } from "../api/gitlabApi";
-import { RepoContext } from "../App";
 import { aggregateByAuthor } from "../util/graphHelper";
 import { BarData } from "./BarChartComp";
-import { Dropdown, Option } from "./Drowdown";
+import { Dropdown, Option } from "./Dropdown";
 import { LeaderboardGraph } from "./LeaderboardGraph";
 
 interface LeaderboardCompProps {
@@ -57,11 +56,27 @@ export const Leaderboard = ({
     return [];
   }, [selectedOption, commits, issues, mergeRequests]);
 
+  useEffect(() => {
+    if (sessionStorage.getItem("leaderboardOrderBy")) {
+      setSelectedOption(
+        JSON.parse(sessionStorage.getItem("leaderboardOrderBy") || "")
+      );
+    }
+  }, []);
+  const handleSelect = (option: Option<category>) => {
+    setSelectedOption(option);
+    sessionStorage.setItem("leaderboardOrderBy", JSON.stringify(option));
+  };
+
   return (
     <>
       <div className="filter-container">
         <span>Order by: </span>
-        <Dropdown options={options} onSelectedChange={setSelectedOption} />
+        <Dropdown
+          options={options}
+          onSelectedChange={handleSelect}
+          selected={selectedOption}
+        />
       </div>
       {isLoading && <h2>Loading...</h2>}
       {!isLoading && topThree?.length === 3 && (

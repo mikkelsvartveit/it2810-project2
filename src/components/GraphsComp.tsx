@@ -5,8 +5,8 @@ import type {
   GitlabCommit,
   GitlabIssue,
 } from "../api/gitlabApi";
-import BarChartComp, { BarData } from "./BarChartComp";
-import { Dropdown } from "./Drowdown";
+import BarChartComp from "./BarChartComp";
+import { Dropdown, Option } from "./Dropdown";
 import { filterData } from "../util/graphHelper";
 
 export type ApiResult = GitlabCommit[] | GitlabIssue[] | GitlabMergeRequest[];
@@ -36,6 +36,29 @@ const GraphsComp = ({ commits, issues, mergeRequests }: GraphCompProps) => {
   const divRef = useRef<null | HTMLDivElement>(null);
   const [parentWidth, setParentWidth] = useState(0);
 
+  const [preSelectedGraphType, setPreSelectedGraphType] = useState<
+    Option<GraphTypeSelect> | undefined
+  >(undefined);
+  const [preSelectedAggregateDataBy, setPreSelectedAggregateDataBy] = useState<
+    Option<AggregateBy> | undefined
+  >(undefined);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("graphQueryBy")) {
+      const queryBy = JSON.parse(sessionStorage.getItem("graphQueryBy") || "");
+      setPreSelectedGraphType(queryBy);
+      setQueryBy(queryBy.value);
+    }
+
+    if (sessionStorage.getItem("graphAggregateDataBy")) {
+      const aggregateDataBy = JSON.parse(
+        sessionStorage.getItem("graphAggregateDataBy") || ""
+      );
+      setPreSelectedAggregateDataBy(aggregateDataBy);
+      setAggregateDataBy(aggregateDataBy.value);
+    }
+  }, []);
+
   useEffect(() => {
     if (divRef.current && divRef.current.parentElement)
       setParentWidth(divRef.current.parentElement.offsetWidth);
@@ -56,7 +79,17 @@ const GraphsComp = ({ commits, issues, mergeRequests }: GraphCompProps) => {
     else if (queryBy === "merge_requests")
       return filterData(mergeRequests, queryBy, aggregateDataBy);
     return [];
-  }, [queryBy, aggregateDataBy]);
+  }, [queryBy, aggregateDataBy, commits, issues, mergeRequests]);
+
+  const handleSelectQueryBy = (option: Option<any>) => {
+    sessionStorage.setItem("graphQueryBy", JSON.stringify(option));
+    setQueryBy(option.value);
+  };
+
+  const handleSelectAggregateDataBy = (option: Option<any>) => {
+    sessionStorage.setItem("graphAggregateDataBy", JSON.stringify(option));
+    setAggregateDataBy(option.value);
+  };
 
   return (
     <div ref={(el) => (el ? (divRef.current = el) : null)}>
@@ -64,12 +97,14 @@ const GraphsComp = ({ commits, issues, mergeRequests }: GraphCompProps) => {
         <span style={style.dropdownSectionSpan}> Get: </span>
         <Dropdown
           options={graphTypeOptions}
-          onSelectedChange={(e) => setQueryBy(e.value)}
+          onSelectedChange={handleSelectQueryBy}
+          selected={preSelectedGraphType}
         />
         <span style={style.dropdownSectionSpan}> Aggregated by: </span>
         <Dropdown
           options={aggregateByOptions}
-          onSelectedChange={(e) => setAggregateDataBy(e.value)}
+          onSelectedChange={handleSelectAggregateDataBy}
+          selected={preSelectedAggregateDataBy}
         />
       </div>
       <BarChartComp

@@ -20,6 +20,10 @@ export const Dropdown = <T extends string>({
   const [open, setOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(selected || options[0]);
 
+  useEffect(() => {
+    setSelectedOption(selected || options[0]);
+  }, [selected, options]);
+
   // Close dropdown when clicking outside of it
   const wrapperRef = useRef<HTMLDivElement>(null);
   useEffect(() => {

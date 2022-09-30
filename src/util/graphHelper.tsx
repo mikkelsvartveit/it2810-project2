@@ -1,5 +1,4 @@
 import {
-  category,
   GitlabCommit,
   GitlabIssue,
   GitlabMergeRequest,

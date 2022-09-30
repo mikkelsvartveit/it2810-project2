@@ -4,6 +4,7 @@ stages:
   - Formatting
   - Linting
   - Testing
+  - Building
   - Deployment
 
 prettier:
@@ -26,6 +27,13 @@ jest:
   script:
     - npm ci
     - npm run test
+
+react-build:
+  stage: Building
+  retry: 1
+  script:
+    - npm ci
+    - npm run build
 
 deploy:
   stage: Deployment
