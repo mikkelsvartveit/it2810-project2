@@ -19,15 +19,46 @@ body {
   box-sizing: border-box;
   max-width: 800px;
   margin: 0 auto;
+
+  &.login {
+    max-width: 600px;
+  }
 }
 
 h2 {
-  color: #555;
+  font-size: 28px;
+  text-align: center;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+form .label {
+  display: block;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 2px solid RGB($theme-color);
+  border-radius: 5px;
+  font-size: 16px;
+  transition-duration: 0.1s;
+
+  &:focus {
+    background-color: RGBA($theme-color, 0.05);
+    outline: none;
+  }
 }
 
 button {
   display: inline-block;
   padding: 10px 15px;
+  margin: 20px 0;
   border: none;
   border-radius: 5px;
   background-color: RGB($theme-color);
@@ -77,8 +108,8 @@ button {
   .label {
     min-width: 200px;
     display: flex;
-    border-radius: 3px;
-    border: 1px solid rgb(54, 53, 53);
+    border-radius: 5px;
+    border: 2px solid RGB($theme-color);
     padding: 8px 8px;
     align-items: center;
     cursor: pointer;
@@ -86,6 +117,8 @@ button {
   .text {
     position: relative;
     left: 8px;
+    font-weight: 600;
+    color: #555;
   }
   .icon {
     position: absolute;
@@ -96,7 +129,7 @@ button {
     min-width: 200px;
     background: #fff;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 5px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     z-index: 100;
     transition: all 0.3s ease-in-out;
@@ -109,6 +142,21 @@ button {
     &:hover {
       background: #f5f5f5;
     }
+  }
+}
+
+.filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+
+  > * {
+    margin: 0 10px;
+  }
+
+  > span {
+    font-size: 18px;
   }
 }
 
@@ -126,13 +174,14 @@ button {
     display: flex;
     align-items: center;
     flex-direction: column;
-    max-width: 250px;
+    width: 250px;
   }
   .image {
     display: block;
     width: 50%;
-    border: 1px solid #ccc;
+    border: 3px solid #fff;
     border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
     margin-bottom: 20px;
     overflow: hidden;
   }
@@ -144,10 +193,10 @@ button {
   .score {
     font-size: 16px;
     font-weight: 400;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
   .podium {
-    background-color: rgb(229, 229, 229);
+    background-color: RGBA($theme-color, 0.2);
     width: 100%;
     font-size: 40px;
     text-align: center;
