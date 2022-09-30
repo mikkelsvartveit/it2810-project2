@@ -120,29 +120,29 @@ button {
     align-items: flex-end;
     justify-content: center;
     margin: 0;
-    max-width: 800px;
+    max-width: 900px;
   }
   .winner {
     display: flex;
     align-items: center;
     flex-direction: column;
-    max-width: 200px;
+    max-width: 250px;
   }
   .image {
     display: block;
-    width: 75%;
+    width: 50%;
     border: 1px solid #ccc;
     border-radius: 50%;
     margin-bottom: 20px;
     overflow: hidden;
   }
   .name {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 600;
     margin-bottom: 10px;
   }
   .score {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
     margin-bottom: 10px;
   }
