@@ -5,12 +5,22 @@ import {
   render,
   waitForElementToBeRemoved,
 } from "@testing-library/react";
+import { RepoContext } from "../App";
 
 it("Stats page renders correctly", async () => {
-  window.localStorage.setItem("token", JSON.stringify("data"));
   const { asFragment } = render(
     <BrowserRouter>
-      <StatsPage />
+      <RepoContext.Provider
+        value={{
+          repoData: {
+            repoURI: "hei",
+            repoToken: "test",
+          },
+          setRepoData: () => {},
+        }}
+      >
+        <StatsPage />
+      </RepoContext.Provider>
     </BrowserRouter>
   );
   await waitForElementToBeRemoved(screen.queryByText("Loading..."));

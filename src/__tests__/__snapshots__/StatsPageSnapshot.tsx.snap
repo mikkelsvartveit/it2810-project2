@@ -64,10 +64,15 @@ exports[`Stats page renders correctly 1`] = `
         id="panel:r0:0"
         role="tabpanel"
       >
-        <div>
-          <h1>
-            Leaderboard
-          </h1>
+        <h2>
+          Leaderboard
+        </h2>
+        <div
+          class="filter-container"
+        >
+          <span>
+            Order by: 
+          </span>
           <div
             class="dropdown"
           >
