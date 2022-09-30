@@ -20,11 +20,6 @@ const InfoPage = () => {
     setLoading(false);
   }, [navigate, repoContext]);
 
-  const handleLogout = () => {
-    repoContext.setRepoData({ repoURI: null, repoToken: null });
-    navigate("/");
-  };
-
   if (isLoading) {
     return <div className="App">Loading...</div>;
   } else {

@@ -1,9 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { repoData } from "../App";
 import { withNavigateHook } from "./withNavigateHook";
 
 interface INavigationProps {
   navigate: any;
+  repoContext: {
+    repoData: repoData;
+    setRepoData: (repoData: repoData) => void;
+  };
 }
 
 class Navbar extends React.Component<INavigationProps> {
@@ -13,7 +18,10 @@ class Navbar extends React.Component<INavigationProps> {
   }
 
   handleLogout = () => {
-    // window.localStorage.removeItem("token");
+    this.props.repoContext.setRepoData({
+      repoURI: null,
+      repoToken: null,
+    });
     this.props.navigate("/");
   };
 
