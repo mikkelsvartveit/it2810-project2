@@ -42,9 +42,7 @@ export const aggregateByAuthor = (
           : undefined;
     } else if (dataType === "issues") {
       let post2 = post as GitlabIssue;
-      author = post2.closed_by.username
-        ? post2.closed_by.username
-        : "Not assigned";
+      author = post2.closed_by.name ? post2.closed_by.name : "Not assigned";
       imgUrl =
         post2.closed_by && post2.closed_by.avatar_url
           ? post2.closed_by.avatar_url

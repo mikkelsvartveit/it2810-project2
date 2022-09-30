@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   BarChart,
   Bar,
@@ -131,22 +132,28 @@ const renderBarchart = (
  * @returns
  */
 const BarChartComp = ({ data, width, aggregateBy }: PropType) => {
-  // cumulate data into 'other' if under 5% of total value
-  const total = data.reduce((acc, curr) => acc + curr.value, 0);
-  const others = data
-    .filter((d) => d.value / total < 0.05)
-    .reduce((acc, curr) => acc + curr.value, 0);
-  if (others > 0) {
-    data = data.filter((d) => d.value / total >= 0.05);
-    data.push({ name: "Others", value: others });
-  }
+  const filteredData = useMemo(() => {
+    let filteredData = [...data];
+    if (aggregateBy === "author") {
+      // cumulate data into 'other' if under 5% of total value
+      const total = filteredData.reduce((acc, curr) => acc + curr.value, 0);
+      const others = filteredData
+        .filter((d) => d.value / total < 0.05)
+        .reduce((acc, curr) => acc + curr.value, 0);
+      if (others > 0) {
+        filteredData = data.filter((d) => d.value / total >= 0.05);
+        filteredData.push({ name: "Others", value: others });
+      }
+    }
+    return filteredData;
+  }, [aggregateBy, data]);
   return (
     <>
       {aggregateBy === "author" ? (
         <>
           <PieChart width={width} height={400} margin={{ left: 20 }}>
             <Pie
-              data={[...data].sort((a, b) => b.value - a.value)}
+              data={[...filteredData].sort((a, b) => b.value - a.value)}
               dataKey="value"
               fill={COLORS[0]}
               label={renderCustomizedLabel}
@@ -154,10 +161,10 @@ const BarChartComp = ({ data, width, aggregateBy }: PropType) => {
               cx="50%"
               cy="50%"
             >
-              {data.map((entry, index) => (
+              {filteredData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={colorByIndexAndLength(index, data.length)}
+                  fill={colorByIndexAndLength(index, filteredData.length)}
                 />
               ))}
             </Pie>
@@ -166,15 +173,15 @@ const BarChartComp = ({ data, width, aggregateBy }: PropType) => {
           </PieChart>
           <div style={{ width: "100%", height: 50 }}></div>
           {renderBarchart(
-            [...data].sort((a, b) => b.value - a.value),
+            [...filteredData].sort((a, b) => b.value - a.value),
             width,
             "vertical"
           )}
         </>
       ) : width > 720 ? (
-        renderBarchart(data, width, "horizontal")
+        renderBarchart(filteredData, width, "horizontal")
       ) : (
-        renderBarchart(data, width, "vertical")
+        renderBarchart(filteredData, width, "vertical")
       )}
     </>
   );
