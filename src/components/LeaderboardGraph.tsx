@@ -23,7 +23,7 @@ export const LeaderboardGraph = ({
   winners[1] = first;
 
   const MAX_BAR_BONUS_HEIGHT = 200;
-  const MIN_BAR_HEIGHT = 130;
+  const MIN_BAR_HEIGHT = 100;
 
   const data = winners.map((winner, key) => {
     return (
@@ -43,9 +43,15 @@ export const LeaderboardGraph = ({
               (MAX_BAR_BONUS_HEIGHT * winner.value) / first.value,
           }}
         >
-          {key === 0 && <Second />}
-          {key === 1 && <First />}
-          {key === 2 && <Third />}
+          {key === 0 && (
+            <Second style={{ width: MIN_BAR_HEIGHT, height: MIN_BAR_HEIGHT }} />
+          )}
+          {key === 2 && (
+            <Third style={{ width: MIN_BAR_HEIGHT, height: MIN_BAR_HEIGHT }} />
+          )}
+          {key === 1 && (
+            <First style={{ width: MIN_BAR_HEIGHT, height: MIN_BAR_HEIGHT }} />
+          )}
         </div>
       </div>
     );

@@ -168,17 +168,17 @@ button {
     align-items: flex-end;
     justify-content: center;
     margin: 0;
-    max-width: 800px;
+    max-width: 900px;
   }
   .winner {
     display: flex;
     align-items: center;
     flex-direction: column;
-    max-width: 200px;
+    width: 250px;
   }
   .image {
     display: block;
-    width: 60%;
+    width: 50%;
     border: 3px solid #fff;
     border-radius: 50%;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
@@ -186,12 +186,12 @@ button {
     overflow: hidden;
   }
   .name {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 600;
     margin-bottom: 10px;
   }
   .score {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
     margin-bottom: 20px;
   }

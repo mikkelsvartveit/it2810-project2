@@ -1,46 +1,31 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import { RepoContext } from "../App";
 import GraphsComp from "../components/GraphsComp";
 import { Leaderboard } from "../components/Leaderboard";
+import Navbar from "../components/Navbar";
 import "../styles/react-tabs.scss";
 
 const InfoPage = () => {
   const [isLoading, setLoading] = useState(true);
-
+  const repoContext = useContext(RepoContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const repoToken = window.localStorage.getItem("token");
-
-    if (!repoToken) {
+    if (!repoContext.repoData.repoURI || !repoContext.repoData.repoToken) {
       navigate("/");
     }
 
     setLoading(false);
-  }, [navigate]);
-
-  const handleLogout = () => {
-    window.localStorage.removeItem("token");
-    navigate("/");
-  };
+  }, [navigate, repoContext]);
 
   if (isLoading) {
     return <div className="App">Loading...</div>;
   } else {
     return (
       <>
-        <div className="navbar">
-          <div className="navbar-content">
-            <div>
-              <span className="navbar-title">GitLab Analyzer</span>
-            </div>
-            <div>
-              <button onClick={handleLogout}>Exit Repo</button>
-            </div>
-          </div>
-        </div>
+        <Navbar />
 
         <div className="content">
           <Tabs>

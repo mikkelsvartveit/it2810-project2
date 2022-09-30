@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { RepoContext } from "../App";
 
 export interface LoginPageProps {
   tokenOnUpdateCallback: (token: string) => void;
@@ -8,15 +9,15 @@ export interface LoginPageProps {
 const LoginPage = () => {
   const [token, setToken] = useState<string>("");
   const [repoURI, setRepoURI] = useState<string>("");
+  const repoContext = useContext(RepoContext);
 
   const navigate = useNavigate();
 
   const submitHandler = (event: React.MouseEvent) => {
     event.preventDefault();
     // TODO: Validate token and repoURI
+    repoContext.setRepoData({ repoURI: repoURI, repoToken: token });
 
-    window.localStorage.setItem("token", token);
-    window.localStorage.setItem("repoURI", repoURI);
     navigate("/stats");
   };
 
