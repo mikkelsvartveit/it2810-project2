@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { category } from "../api/gitlabApi";
 import { RepoContext } from "../App";
 import { getTopThree } from "../util/graphHelper";
-import { Dropdown, Option } from "./Drowdown";
+import { Dropdown, Option } from "./Dropdown";
 import { LeaderboardGraph, Winner } from "./LeaderboardGraph";
 
 export const Leaderboard = () => {

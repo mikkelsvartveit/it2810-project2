@@ -11,7 +11,7 @@ import type {
   GitlabIssue,
 } from "../api/gitlabApi";
 import BarChartComp, { BarData } from "./BarChartComp";
-import { Dropdown } from "./Drowdown";
+import { Dropdown } from "./Dropdown";
 import { RepoContext } from "../App";
 
 export type ApiResult = GitlabCommit[] | GitlabIssue[] | GitlabMergeRequest[];
