@@ -24,16 +24,16 @@ export const Leaderboard = ({
 }: LeaderboardCompProps) => {
   const options: Option<category>[] = [
     {
-      value: "commits",
-      label: "Commits",
+      value: "issues",
+      label: "Issues Closed",
     },
     {
       value: "mergeRequests",
       label: "Merge Requests",
     },
     {
-      value: "issues",
-      label: "Issues Closed",
+      value: "commits",
+      label: "Commits",
     },
   ];
   const [isLoading, setLoading] = useState(true);
