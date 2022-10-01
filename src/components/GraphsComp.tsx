@@ -20,9 +20,9 @@ interface GraphCompProps {
 }
 
 const graphTypeOptions: { label: string; value: GraphTypeSelect }[] = [
-  { label: "Commits", value: "commits" },
   { label: "Issues Closed", value: "issues" },
   { label: "Merge Requests", value: "merge_requests" },
+  { label: "Commits", value: "commits" },
 ];
 
 const aggregateByOptions: { label: string; value: AggregateBy }[] = [
@@ -100,7 +100,7 @@ const GraphsComp = ({ commits, issues, mergeRequests }: GraphCompProps) => {
           onSelectedChange={handleSelectQueryBy}
           selected={preSelectedGraphType}
         />
-        <span style={style.dropdownSectionSpan}> Aggregated by: </span>
+        <span style={style.dropdownSectionSpan}> Group by: </span>
         <Dropdown
           options={aggregateByOptions}
           onSelectedChange={handleSelectAggregateDataBy}
@@ -128,7 +128,7 @@ const style = {
   },
   dropdownSectionSpan: {
     margin: "0 10px",
-    fontSize: "18px",
+    fontSize: "16px",
   },
 };
 

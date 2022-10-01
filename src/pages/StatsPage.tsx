@@ -33,8 +33,6 @@ const StatsPage = () => {
     if (sessionStorage.getItem("tabIndex")) {
       setDefaultTabIndex(Number(sessionStorage.getItem("tabIndex")));
     }
-
-    setLoading(false);
   }, [navigate, repoContext]);
 
   const onChangeTab = (index: number) => {
@@ -78,17 +76,16 @@ const StatsPage = () => {
         setCommits(commits);
         setMergeRequests(mergeRequests);
         setIssues(issues);
+        setLoading(false);
       }
     }
   }, [repoContext.repoData.repoURI, repoContext.repoData.repoToken]);
 
-  if (isLoading) {
-    return <CircularProgress className="leaderboard" size={200} />;
-  } else {
-    return (
-      <>
-        <Navbar />
-        <div className="content">
+  return (
+    <>
+      <Navbar />
+      <div className="content">
+        {!isLoading ? (
           <Tabs defaultIndex={defaultTabIndex} onSelect={onChangeTab}>
             <TabList>
               <Tab>Leaderboard</Tab>
@@ -113,9 +110,14 @@ const StatsPage = () => {
               />
             </TabPanel>
           </Tabs>
-        </div>
-      </>
-    );
-  }
+        ) : (
+          <div className="loading">
+            <CircularProgress className="loading" size={50} />
+          </div>
+        )}
+      </div>
+    </>
+  );
 };
+
 export default StatsPage;

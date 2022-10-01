@@ -1,6 +1,7 @@
 import { ReactComponent as First } from "../assets/medals/1place-medal.svg";
 import { ReactComponent as Second } from "../assets/medals/2place-medal.svg";
 import { ReactComponent as Third } from "../assets/medals/3place-medal.svg";
+import PersonImage from "../assets/person.png";
 import { BarData } from "./BarChartComp";
 
 export interface LeaderboardGraphProps {
@@ -26,7 +27,7 @@ export const LeaderboardGraph = ({
       <div className="leaderboard winner" key={key}>
         <img
           className="leaderboard image"
-          src={winner.imgUrl || "https://picsum.photos/200"}
+          src={winner.imgUrl || PersonImage}
           alt="winner"
         />
         <div className="leaderboard name">{winner.name}</div>
