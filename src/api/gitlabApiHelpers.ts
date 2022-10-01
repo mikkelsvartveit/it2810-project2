@@ -39,6 +39,18 @@ export const fetchRequestWithToken = async (
   });
 };
 
+// Send dummy request to check authentication
+export const validateToken = async (
+  projectURI: GitlabProjectURI,
+  accessToken: string
+) => {
+  const response = await fetchRequestWithToken(
+    `${projectURI}/merge_requests?state=opened`,
+    accessToken
+  );
+  return response.status === 200;
+};
+
 /* GET /projects/:id/merge_requests */
 export const getMergeRequests = async (
   projectURI: GitlabProjectURI,
