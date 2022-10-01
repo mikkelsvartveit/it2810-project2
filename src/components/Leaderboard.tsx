@@ -1,4 +1,3 @@
-import { CircularProgress } from "@mui/material";
 import { useState, useEffect, useMemo } from "react";
 import {
   category,
@@ -36,7 +35,7 @@ export const Leaderboard = ({
       label: "Commits",
     },
   ];
-  const [isLoading, setLoading] = useState(true);
+
   const [selectedOption, setSelectedOption] = useState<Option<category>>(
     options[0]
   );
@@ -51,7 +50,6 @@ export const Leaderboard = ({
       toReturn = aggregateByAuthor(mergeRequests, "merge_requests");
     if (toReturn.length > 0) {
       toReturn.sort((a, b) => a.value - b.value);
-      setLoading(false);
       return toReturn.splice(-3);
     }
     return [];
@@ -79,9 +77,13 @@ export const Leaderboard = ({
           selected={selectedOption}
         />
       </div>
-      {isLoading && <CircularProgress className="loading" size={200} />}
-      {!isLoading && topThree?.length === 3 && (
+      {topThree?.length === 3 ? (
         <LeaderboardGraph winners={topThree} category={selectedOption.label} />
+      ) : (
+        <>
+          <h3>Not enough contributions!</h3>
+          <p>You need at least three contributors to display the leader podium.</p>
+        </>
       )}
     </>
   );

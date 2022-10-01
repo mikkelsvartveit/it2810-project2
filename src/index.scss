@@ -244,9 +244,11 @@ button {
 }
 
 .loading {
-  position: relative;
-  top: calc(50% - 100px);
-  left: calc(50% - 100px);
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 20px auto;
+
   svg {
     color: RGB($theme-color);
   }
