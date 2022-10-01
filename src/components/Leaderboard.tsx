@@ -82,7 +82,9 @@ export const Leaderboard = ({
       ) : (
         <>
           <h3>Not enough contributions!</h3>
-          <p>You need at least three contributors to display the leader podium.</p>
+          <p>
+            You need at least three contributors to display the leader podium.
+          </p>
         </>
       )}
     </>
