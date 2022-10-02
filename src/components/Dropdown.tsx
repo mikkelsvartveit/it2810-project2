@@ -66,7 +66,7 @@ export const Dropdown = <T extends string>({
   });
 
   return (
-    <div className="dropdown" ref={wrapperRef}>
+    <div data-testid="dropdown" className="dropdown" ref={wrapperRef}>
       <div className="dropdown label" onClick={() => setOpen(!open)}>
         <div className="dropdown text">{selectedOption.label}</div>
         <ArrowDropDownIcon
