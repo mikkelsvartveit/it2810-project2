@@ -48,7 +48,7 @@ export const validateToken = async (
     `${projectURI}/merge_requests?state=opened`,
     accessToken
   );
-  return response.status === 200;
+  return { isValid: response.status === 200, statusCode: response.status };
 };
 
 /* GET /projects/:id/merge_requests */
