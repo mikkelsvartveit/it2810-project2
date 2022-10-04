@@ -75,6 +75,7 @@ exports[`Stats page renders correctly 1`] = `
           </span>
           <div
             class="dropdown"
+            data-testid="dropdown"
           >
             <div
               class="dropdown label"
@@ -82,7 +83,7 @@ exports[`Stats page renders correctly 1`] = `
               <div
                 class="dropdown text"
               >
-                Commits
+                Issues Closed
               </div>
               <svg
                 aria-hidden="true"
@@ -109,11 +110,17 @@ exports[`Stats page renders correctly 1`] = `
               <div
                 class="dropdown item"
               >
-                Issues
+                Commits
               </div>
             </div>
           </div>
         </div>
+        <h3>
+          Not enough contributions!
+        </h3>
+        <p>
+          You need at least three contributors to display the leader podium.
+        </p>
       </div>
       <div
         aria-labelledby="tab:r0:1"

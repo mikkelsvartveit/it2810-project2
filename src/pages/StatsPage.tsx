@@ -111,7 +111,7 @@ const StatsPage = () => {
             </TabPanel>
           </Tabs>
         ) : (
-          <div className="loading">
+          <div className="loading" data-testid="statspage-loading">
             <CircularProgress className="loading" size={50} />
           </div>
         )}

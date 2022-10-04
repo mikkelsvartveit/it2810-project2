@@ -20,6 +20,7 @@ exports[`Login Page renders correctly 1`] = `
       onChange={[Function]}
       placeholder="https://gitlab.com/<username>/<repo>"
       type="text"
+      value=""
     />
     <p
       className="label"
@@ -29,7 +30,8 @@ exports[`Login Page renders correctly 1`] = `
     <input
       onChange={[Function]}
       placeholder="xxxxx-xxxxxx_xxxxxxxxx_xxx"
-      type="text"
+      type="password"
+      value=""
     />
     <button
       onClick={[Function]}
