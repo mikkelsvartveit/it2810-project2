@@ -83,43 +83,47 @@ const renderBarchart = (
   const height = data.length * 90;
   if (orientation === "vertical") {
     return (
-      <BarChart
-        width={width}
-        height={height}
-        data={[...data].sort((a, b) => b.value - a.value)}
-        layout={"vertical"}
-        margin={{ left: 20 }}
-      >
-        <CartesianGrid strokeDasharray="1 1" />
-        <YAxis dataKey="name" type="category" />
-        <Bar dataKey="value" fill={COLORS[0]} layout="vertical">
-          {data.map((entry, index) => (
-            <Cell
-              key={`cell-${index}`}
-              fill={colorByIndexAndLength(index, data.length)}
-            />
-          ))}
-        </Bar>
-        <XAxis dataKey={"value"} type={"number"} />
-        <Tooltip />
-      </BarChart>
+      <div data-testid="barchart">
+        <BarChart
+          width={width}
+          height={height}
+          data={[...data].sort((a, b) => b.value - a.value)}
+          layout={"vertical"}
+          margin={{ left: 20 }}
+        >
+          <CartesianGrid strokeDasharray="1 1" />
+          <YAxis dataKey="name" type="category" />
+          <Bar dataKey="value" fill={COLORS[0]} layout="vertical">
+            {data.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={colorByIndexAndLength(index, data.length)}
+              />
+            ))}
+          </Bar>
+          <XAxis dataKey={"value"} type={"number"} />
+          <Tooltip />
+        </BarChart>
+      </div>
     );
   } else {
     return (
-      <BarChart width={width} height={height} data={data}>
-        <CartesianGrid strokeDasharray="1 1" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Bar dataKey="value" fill={COLORS[0]}>
-          {data.map((entry, index) => (
-            <Cell
-              key={`cell-${index}`}
-              fill={colorByIndexAndLength(index, data.length)}
-            />
-          ))}
-        </Bar>
-        <Tooltip />
-      </BarChart>
+      <div data-testid="barchart">
+        <BarChart width={width} height={height} data={data}>
+          <CartesianGrid strokeDasharray="1 1" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Bar dataKey="value" fill={COLORS[0]}>
+            {data.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={colorByIndexAndLength(index, data.length)}
+              />
+            ))}
+          </Bar>
+          <Tooltip />
+        </BarChart>
+      </div>
     );
   }
 };
