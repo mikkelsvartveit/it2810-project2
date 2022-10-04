@@ -3,10 +3,10 @@ import { render, screen } from "@testing-library/react";
 import {
   LeaderboardGraph,
   LeaderboardGraphProps,
-} from "./components/LeaderboardGraph";
+} from "../components/LeaderboardGraph";
 import { unmountComponentAtNode } from "react-dom";
-import BarChartComp, { BarData } from "./components/BarChartComp";
-import { Dropdown, Option } from "./components/Dropdown";
+import BarChartComp, { BarData } from "../components/BarChartComp";
+import { Dropdown, Option } from "../components/Dropdown";
 
 let container: any = null;
 beforeEach(() => {

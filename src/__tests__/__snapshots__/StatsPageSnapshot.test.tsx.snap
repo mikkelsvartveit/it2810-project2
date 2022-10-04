@@ -1,0 +1,134 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Stats page renders correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="navbar"
+  >
+    <div
+      class="navbar-content"
+    >
+      <div>
+        <span
+          class="navbar-title"
+        >
+          GitLab Analyzer
+        </span>
+      </div>
+      <button>
+        <a
+          href="/"
+        />
+        Exit repo
+      </button>
+    </div>
+  </div>
+  <div
+    class="content"
+  >
+    <div
+      class="react-tabs"
+      data-rttabs="true"
+    >
+      <ul
+        class="react-tabs__tab-list"
+        role="tablist"
+      >
+        <li
+          aria-controls="panel:r0:0"
+          aria-disabled="false"
+          aria-selected="true"
+          class="react-tabs__tab react-tabs__tab--selected"
+          data-rttab="true"
+          id="tab:r0:0"
+          role="tab"
+          tabindex="0"
+        >
+          Leaderboard
+        </li>
+        <li
+          aria-controls="panel:r0:1"
+          aria-disabled="false"
+          aria-selected="false"
+          class="react-tabs__tab"
+          data-rttab="true"
+          id="tab:r0:1"
+          role="tab"
+        >
+          Graphs
+        </li>
+      </ul>
+      <div
+        aria-labelledby="tab:r0:0"
+        class="react-tabs__tab-panel react-tabs__tab-panel--selected"
+        id="panel:r0:0"
+        role="tabpanel"
+      >
+        <h2>
+          Leaderboard
+        </h2>
+        <div
+          class="filter-container"
+        >
+          <span>
+            Order by: 
+          </span>
+          <div
+            class="dropdown"
+            data-testid="dropdown"
+          >
+            <div
+              class="dropdown label"
+            >
+              <div
+                class="dropdown text"
+              >
+                Issues Closed
+              </div>
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium dropdown icon css-i4bv87-MuiSvgIcon-root"
+                data-testid="ArrowDropDownIcon"
+                focusable="false"
+                style="transform: rotate(-90deg);"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="m7 10 5 5 5-5z"
+                />
+              </svg>
+            </div>
+            <div
+              class="dropdown container"
+              style="display: none; position: absolute;"
+            >
+              <div
+                class="dropdown item"
+              >
+                Merge Requests
+              </div>
+              <div
+                class="dropdown item"
+              >
+                Commits
+              </div>
+            </div>
+          </div>
+        </div>
+        <h3>
+          Not enough contributions!
+        </h3>
+        <p>
+          You need at least three contributors to display the leader podium.
+        </p>
+      </div>
+      <div
+        aria-labelledby="tab:r0:1"
+        class="react-tabs__tab-panel"
+        id="panel:r0:1"
+        role="tabpanel"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;

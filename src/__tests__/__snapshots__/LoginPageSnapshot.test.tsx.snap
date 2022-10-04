@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login Page renders correctly 1`] = `
+<div
+  className="content login"
+>
+  <h1>
+    GitLab Analyzer
+  </h1>
+  <p>
+    Enter your repository URL and an access token to get started.
+  </p>
+  <form>
+    <p
+      className="label"
+    >
+      Repository URL:
+    </p>
+    <input
+      onChange={[Function]}
+      placeholder="https://gitlab.com/<username>/<repo>"
+      type="text"
+      value=""
+    />
+    <p
+      className="label"
+    >
+      Access token:
+    </p>
+    <input
+      onChange={[Function]}
+      placeholder="xxxxx-xxxxxx_xxxxxxxxx_xxx"
+      type="password"
+      value=""
+    />
+    <button
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
