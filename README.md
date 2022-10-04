@@ -63,7 +63,7 @@ The GitLab API is called using Javascript's built-in Fetch API. This API makes i
 - GET /projects/:id/merge_requests
   - Mostly used with query state='merged' for analyzing statistics of merged merge requests
 - GET /projects/:id/repository/commits
-  - With query per_page=10000 we are able to analyze a large quantity of commits from the project. Since the filtering of the data isn't too computationally demanding, a single large page per request works fine. In the future, multiple requests with smaller pages might need to be implemented to accomodate larger projects.
+  - With query per_page=1000 we are able to analyze a large quantity of commits from the project. Since the filtering of the data isn't too computationally demanding, a single large page per request works fine. In the future, multiple requests with smaller pages might need to be implemented to accomodate larger projects.
 - GET /projects/:id/issues
   - We query issues by state='closed', since this metric gives most insight into project contribution per author
 

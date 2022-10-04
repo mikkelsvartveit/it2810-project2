@@ -44,7 +44,6 @@ const GraphsComp = ({ commits, issues, mergeRequests }: GraphCompProps) => {
         setParentWidth(divRef.current.parentElement.offsetWidth);
     });
   }, [divRef]);
-  /* */
 
   /* Handle and Remember dropdown-selection with session-storage */
   const [preSelectedGraphType, setPreSelectedGraphType] = useState<
@@ -79,7 +78,6 @@ const GraphsComp = ({ commits, issues, mergeRequests }: GraphCompProps) => {
     sessionStorage.setItem("graphAggregateDataBy", JSON.stringify(option));
     setAggregateDataBy(option.value);
   };
-  /* */
 
   const [queryBy, setQueryBy] = useState<GraphTypeSelect>("commits");
   const [aggregateDataBy, setAggregateDataBy] = useState<AggregateBy>("author");

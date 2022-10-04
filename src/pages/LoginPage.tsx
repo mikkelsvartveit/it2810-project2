@@ -28,6 +28,7 @@ const LoginPage = () => {
       return;
     }
 
+    setErrorMsg("");
     setLoading(true);
     const responseInfo = await validateToken(apiURI, token);
     setLoading(false);
@@ -49,7 +50,6 @@ const LoginPage = () => {
       return;
     }
 
-    setErrorMsg("");
     repoContext.setRepoData({ repoURI: apiURI, repoToken: token });
 
     navigate("/stats");
