@@ -16,7 +16,7 @@ The login page has a form with input fields for the GitLab repository URL and an
 
 ### Stats page
 
-The StatsPage is the main attraction of the application. It features a tab interface with two tabs, Graphs and Leaderboard. The Graphs tab shows a graph where you can display commits, merge requests or issues. This can then be aggregated by weekday, author or time of day. The Leaderboard tab shows a podium with the top 3 contributors to the repository. The leaderboard can be sorted by commits, merge requests or issues closed. The selected tab and the sorting attributes are persistent until the browser tab is closed, allowing the user to refresh the page without losing the provided parameters.
+The StatsPage is the main attraction of the application. It features a tab interface with two tabs, Graphs and Leaderboard. The Graphs tab shows a graph where you can display commits, merge requests or issues. This can then be grouped by weekday, author or time of day. The Leaderboard tab shows a podium with the top 3 contributors to the repository. The leaderboard can be sorted by commits, merge requests or issues closed. The selected tab and the sorting attributes are persistent until the browser tab is closed, allowing the user to refresh the page without losing the provided parameters.
 
 ## Technology
 
@@ -47,9 +47,8 @@ The web application is compatible with all major browsers, and has been tested o
 - Viewport property in HTML
 - CSS Media queries
 - CSS Flexbox
-- `vw` and `vh` units
-
-TODO: Have we really used vw/vh?
+- onResize eventlistener
+  - Graph library Recharts required a width property and could not be dynamically resized with css
 
 ### HTML5 Web Storage
 
@@ -57,9 +56,16 @@ The application utilizes both localStorage and sessionStorage to allow persistan
 
 ### GitLab API
 
-The GitLab API is called using Javascript's built-in Fetch API. This API makes it easy to load external data in an asynchronous way (AJAX).
+The GitLab API is called using Javascript's built-in Fetch API. This API makes it easy to load external data in an asynchronous way (AJAX). The request is authenticated by passing the token in the HTTP request's header field: 'Authorization: Bearer token'.
 
-TODO: Add endpoints
+#### Endpoints
+
+- GET /projects/:id/merge_requests
+  - Mostly used with query state='merged' for analyzing statistics of merged merge requests
+- GET /projects/:id/repository/commits
+  - With query per_page=10000 we are able to analyze a large quantity of commits from the project. Since the filtering of the data isn't too computationally demanding, a single large page per request works fine. In the future, multiple requests with smaller pages might need to be implemented to accomodate larger projects.
+- GET /projects/:id/issues
+  - We query issues by state='closed', since this metric gives most insight into project contribution per author
 
 ### Testing
 

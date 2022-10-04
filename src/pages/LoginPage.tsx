@@ -19,7 +19,7 @@ const LoginPage = () => {
 
   const submitHandler = async (event: React.MouseEvent) => {
     event.preventDefault();
-    // TODO: Validate token and repoURI
+
     const apiURI = getApiURI(repoURI);
     if (!apiURI) {
       setErrorMsg(
@@ -28,19 +28,28 @@ const LoginPage = () => {
       return;
     }
 
-    setErrorMsg("");
     setLoading(true);
-    const valid = await validateToken(apiURI, token);
+    const responseInfo = await validateToken(apiURI, token);
     setLoading(false);
 
-    if (!valid) {
-      setErrorMsg(
-        "Authorization failed. Make sure your access token is valid."
-      );
-
+    if (!responseInfo.isValid) {
+      if (responseInfo.statusCode === 401) {
+        setErrorMsg(
+          "Authorization failed. Make sure your access token is valid."
+        );
+      } else if (responseInfo.statusCode === 404) {
+        setErrorMsg(
+          "No repository was found with this URL. Please make sure you have entered a valid repository URL."
+        );
+      } else {
+        setErrorMsg(
+          "An error occurred while validating your access token. Check token and project link or try again later."
+        );
+      }
       return;
     }
 
+    setErrorMsg("");
     repoContext.setRepoData({ repoURI: apiURI, repoToken: token });
 
     navigate("/stats");
