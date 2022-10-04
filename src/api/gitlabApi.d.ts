@@ -1,4 +1,4 @@
-type toBeDate = string;
+type GitlabDate = string;
 
 export type GitlabProjectURI = `https://${string}/api/v4/projects/${
   | number
@@ -24,10 +24,10 @@ export interface GitlabCommit {
   message: string;
   author_name: string;
   author_email: string;
-  authored_date: toBeDate;
+  authored_date: GitlabDate;
   committer_name: string;
   committer_email: string;
-  committed_date: toBeDate;
+  committed_date: GitlabDate;
   [key: string]: any;
 }
 
@@ -39,12 +39,12 @@ export interface GitlabMergeRequest {
   title: string;
   description: string;
   state: "opened" | "closed" | "locked" | "merged";
-  created_at: toBeDate;
-  updated_at: toBeDate;
+  created_at: GitlabDate;
+  updated_at: GitlabDate;
   merge_user: GitlabUser;
-  merged_at: toBeDate;
+  merged_at: GitlabDate;
   closed_by: GitlabUser;
-  closed_at: toBeDate;
+  closed_at: GitlabDate;
   target_branch: string;
   source_branch: string;
   user_notes_count: number;
@@ -84,12 +84,12 @@ export interface GitlabIssue {
   downvotes: number;
   merge_requests_count: number;
   title: string;
-  updated_at: toBeDate;
-  created_at: toBeDate;
-  closed_at: toBeDate;
+  updated_at: GitlabDate;
+  created_at: GitlabDate;
+  closed_at: GitlabDate;
   closed_by: GitlabUser;
   user_notes_count: number;
-  due_date: toBeDate; // "31-12-2022" format
+  due_date: GitlabDate; // "31-12-2022" format
   web_url: string;
   references: {
     short: string;

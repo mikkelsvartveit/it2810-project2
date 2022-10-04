@@ -42,12 +42,13 @@ const COLORS = [
   "#1700AE",
 ];
 
+//evenly spread colors by index and length of input
 const colorByIndexAndLength = (index: number, dataLength: number) => {
-  //evenly spread colors by index and length of input
   const i = Math.floor((index / dataLength) * COLORS.length);
   return COLORS[i];
 };
 
+// Render custom label for pie chart - From Recharts docs
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({
   cx,
@@ -136,10 +137,10 @@ const renderBarchart = (
  * @returns
  */
 const BarChartComp = ({ data, width, aggregateBy }: PropType) => {
+  // cumulate data into 'other' if under 5% of total value
   const filteredData = useMemo(() => {
     let filteredData = [...data];
     if (aggregateBy === "author") {
-      // cumulate data into 'other' if under 5% of total value
       const total = filteredData.reduce((acc, curr) => acc + curr.value, 0);
       const others = filteredData
         .filter((d) => d.value / total < 0.05)
@@ -151,6 +152,7 @@ const BarChartComp = ({ data, width, aggregateBy }: PropType) => {
     }
     return filteredData;
   }, [aggregateBy, data]);
+
   return (
     <>
       {aggregateBy === "author" ? (

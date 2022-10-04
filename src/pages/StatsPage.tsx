@@ -26,6 +26,7 @@ const StatsPage = () => {
   const [defaultTabIndex, setDefaultTabIndex] = useState(0);
 
   useEffect(() => {
+    // Redirect to front page if no repo data is available
     if (!repoContext.repoData.repoURI || !repoContext.repoData.repoToken) {
       navigate("/");
     }
@@ -44,8 +45,10 @@ const StatsPage = () => {
   const [issues, setIssues] = useState<GitlabIssue[]>([]);
 
   useEffect(() => {
-    if (!repoContext.repoData.repoURI || !repoContext.repoData.repoToken)
+    if (!repoContext.repoData.repoURI || !repoContext.repoData.repoToken) {
       return;
+    }
+    // debounce to ensure only one request is sent per page mount
     let debounce = true;
     getGitlabData();
     return () => {

@@ -36,6 +36,17 @@ const GraphsComp = ({ commits, issues, mergeRequests }: GraphCompProps) => {
   const divRef = useRef<null | HTMLDivElement>(null);
   const [parentWidth, setParentWidth] = useState(0);
 
+  useEffect(() => {
+    if (divRef.current && divRef.current.parentElement)
+      setParentWidth(divRef.current.parentElement.offsetWidth);
+    window.addEventListener("resize", () => {
+      if (divRef.current && divRef.current.parentElement)
+        setParentWidth(divRef.current.parentElement.offsetWidth);
+    });
+  }, [divRef]);
+  /* */
+
+  /* Handle and Remember dropdown-selection with session-storage */
   const [preSelectedGraphType, setPreSelectedGraphType] = useState<
     Option<GraphTypeSelect> | undefined
   >(undefined);
@@ -59,14 +70,16 @@ const GraphsComp = ({ commits, issues, mergeRequests }: GraphCompProps) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (divRef.current && divRef.current.parentElement)
-      setParentWidth(divRef.current.parentElement.offsetWidth);
-    window.addEventListener("resize", () => {
-      if (divRef.current && divRef.current.parentElement)
-        setParentWidth(divRef.current.parentElement.offsetWidth);
-    });
-  }, [divRef]);
+  const handleSelectQueryBy = (option: Option<GraphTypeSelect>) => {
+    sessionStorage.setItem("graphQueryBy", JSON.stringify(option));
+    setQueryBy(option.value);
+  };
+
+  const handleSelectAggregateDataBy = (option: Option<AggregateBy>) => {
+    sessionStorage.setItem("graphAggregateDataBy", JSON.stringify(option));
+    setAggregateDataBy(option.value);
+  };
+  /* */
 
   const [queryBy, setQueryBy] = useState<GraphTypeSelect>("commits");
   const [aggregateDataBy, setAggregateDataBy] = useState<AggregateBy>("author");
@@ -80,16 +93,6 @@ const GraphsComp = ({ commits, issues, mergeRequests }: GraphCompProps) => {
       return filterData(mergeRequests, queryBy, aggregateDataBy);
     return [];
   }, [queryBy, aggregateDataBy, commits, issues, mergeRequests]);
-
-  const handleSelectQueryBy = (option: Option<any>) => {
-    sessionStorage.setItem("graphQueryBy", JSON.stringify(option));
-    setQueryBy(option.value);
-  };
-
-  const handleSelectAggregateDataBy = (option: Option<any>) => {
-    sessionStorage.setItem("graphAggregateDataBy", JSON.stringify(option));
-    setAggregateDataBy(option.value);
-  };
 
   return (
     <div ref={(el) => (el ? (divRef.current = el) : null)}>
