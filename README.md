@@ -1,8 +1,8 @@
 # IT2810 Project 2
 
-This web application was created by Jonah Wiecek, Mathias Aas, Stian Sulebak and Mikkel Svartveit during the course IT2810 Web Development at NTNU. The purpose of the application is to visually display interesting statistics from a provided GitLab repository.
+This web application was created during the course IT2810 Web Development at NTNU. The purpose of the application is to visually display interesting statistics from a provided GitLab repository.
 
-![Screenshot](https://user-images.githubusercontent.com/30391413/193277641-6b6e591e-1be1-4382-817c-cefbced88ec1.png)
+![Screenshot](https://user-images.githubusercontent.com/30391413/193851335-1531515b-2751-4186-ada9-2821d08a6793.png)
 
 ## Content and functionality
 

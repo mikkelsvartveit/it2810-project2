@@ -57,7 +57,9 @@ export const getMergeRequests = async (
   accessToken: string,
   state?: "opened" | "closed" | "locked" | "merged"
 ) => {
-  const uri = `${projectURI}/merge_requests?state=${state || "all"}`;
+  const uri = `${projectURI}/merge_requests?state=${
+    state || "all"
+  }&per_page=100`;
   const fetched = await fetchRequestWithToken(uri, accessToken);
 
   if (fetched.status !== 200) {
@@ -74,7 +76,7 @@ export const getCommits = async (
   projectURI: GitlabProjectURI,
   accessToken: string
 ) => {
-  const uri = `${projectURI}/repository/commits?per_page=10000`;
+  const uri = `${projectURI}/repository/commits?per_page=1000`;
   const fetched = await fetchRequestWithToken(uri, accessToken);
 
   if (fetched.status !== 200) {
@@ -92,8 +94,8 @@ export const getIssues = async (
   accessToken: string,
   state?: "opened" | "closed"
 ) => {
-  let uri = `${projectURI}/issues`;
-  if (state) uri += `?state=${state}`;
+  let uri = `${projectURI}/issues?per_page=100`;
+  if (state) uri += `&state=${state}`;
   const fetched = await fetchRequestWithToken(uri, accessToken);
 
   if (fetched.status !== 200) {

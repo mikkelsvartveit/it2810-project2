@@ -58,20 +58,25 @@ const StatsPage = () => {
         !repoContext.repoData.repoToken
       )
         return;
-      const commits = await getCommits(
-        repoContext.repoData.repoURI,
-        repoContext.repoData.repoToken
-      );
-      const mergeRequests = await getMergeRequests(
-        repoContext.repoData.repoURI,
-        repoContext.repoData.repoToken,
-        "merged"
-      );
-      const issues = await getIssues(
-        repoContext.repoData.repoURI,
-        repoContext.repoData.repoToken,
-        "closed"
-      );
+
+      // Use Promise.all to fetch data in parallel
+      const [commits, mergeRequests, issues] = await Promise.all([
+        getCommits(
+          repoContext.repoData.repoURI,
+          repoContext.repoData.repoToken
+        ),
+        getMergeRequests(
+          repoContext.repoData.repoURI,
+          repoContext.repoData.repoToken,
+          "merged"
+        ),
+        getIssues(
+          repoContext.repoData.repoURI,
+          repoContext.repoData.repoToken,
+          "closed"
+        ),
+      ]);
+
       if (debounce) {
         setCommits(commits);
         setMergeRequests(mergeRequests);
